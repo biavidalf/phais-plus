@@ -8,15 +8,17 @@ datasource db {
 }
 
 model Register {
-  id         String    @id @default(uuid())
-  cnpj       String    @unique
-  email      String
-  username   String
-  phone      String
-  approved   Boolean   @default(false)
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
+  id                 String    @id @default(uuid())
+  cnpj               String    @unique
+  email              String
+  username           String
+  phone              String
+  approved           Boolean   @default(false)
+  disapproved        Boolean   @default(false)
+  disapproval_reason String?
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+  deleted_at         DateTime?
 
   @@map("registers")
 }
@@ -198,20 +200,22 @@ model Status {
 }
 
 model Request {
-  id            String    @id @default(uuid())
+  id            String     @id @default(uuid())
   hospital_id   String
   medication_id String
   priority_id   String
   status_id     String
   quantity      Int
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
   deleted_at    DateTime?
-
-  hospital   User       @relation(fields: [hospital_id], references: [id])
-  medication Medication @relation(fields: [medication_id], references: [id])
-  priority   Priority   @relation(fields: [priority_id], references: [id])
-  status     Status     @relation(fields: [status_id], references: [id])
+  description   String
+  due_date      DateTime
+  return_date   DateTime
+  hospital      User       @relation(fields: [hospital_id], references: [id])
+  medication    Medication @relation(fields: [medication_id], references: [id])
+  priority      Priority   @relation(fields: [priority_id], references: [id])
+  status        Status     @relation(fields: [status_id], references: [id])
 
   @@map("requests")
 }
