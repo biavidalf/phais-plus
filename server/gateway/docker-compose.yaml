@@ -1,8 +1,9 @@
-version: "3"
+version: "3.8"
 
 services:
   krakend:
-    image: devopsfaith/krakend
+    container_name: krakend
+    image: devopsfaith/krakend:latest
     ports:
       - "8080:8080"
     volumes:
