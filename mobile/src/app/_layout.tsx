@@ -2,6 +2,7 @@ import { Link, Stack } from "expo-router";
 
 import {
   useFonts,
+  SourceSansPro_200ExtraLight,
   SourceSansPro_300Light,
   SourceSansPro_400Regular,
   SourceSansPro_600SemiBold,
@@ -21,6 +22,7 @@ export default function Layout() {
   }
 
   const [fontsLoaded] = useFonts({
+    SourceSansPro_200ExtraLight,
     SourceSansPro_300Light,
     SourceSansPro_400Regular,
     SourceSansPro_600SemiBold,
@@ -41,7 +43,10 @@ export default function Layout() {
         headerStyle: {
           backgroundColor: theme.colors.green.dark,
         },
-        headerTitleStyle: { fontFamily: theme.fonts.family.medium },
+        headerTitleStyle: {
+          fontFamily: theme.fonts.family.semibold,
+          fontSize: theme.fonts.size.xl,
+        },
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

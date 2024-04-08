@@ -22,9 +22,12 @@ export default function SearchInput({
         placeholderTextColor={theme.colors.neutral["400"]}
       />
 
-      <View style={styles.searchIcon}>
-        <Feather name="search" size={24} color={theme.colors.neutral["400"]} />
-      </View>
+      <Feather
+        name="search"
+        size={24}
+        color={theme.colors.neutral["400"]}
+        style={styles.searchIcon}
+      />
     </View>
   );
 }
@@ -35,11 +38,13 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     backgroundColor: theme.colors.bg.layer,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingLeft: 20,
+    paddingRight: 56,
+    paddingVertical: 12,
     borderRadius: 4,
     fontFamily: theme.fonts.family.regular,
-    fontSize: theme.fonts.size.body.md,
+    fontSize: theme.fonts.size.base,
+    color: theme.colors.neutral[200],
   },
   searchIcon: {
     position: "absolute",

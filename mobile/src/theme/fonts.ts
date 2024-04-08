@@ -1,11 +1,19 @@
 export const fonts = {
   family: {
-    regular: "Poppins_400Regular",
-    medium: "Poppins_500Medium",
-    bold: "Poppins_700Bold",
+    extralight: "SourceSansPro_200ExtraLight",
+    light: "SourceSansPro_300Light",
+    regular: "SourceSansPro_400Regular",
+    semibold: "SourceSansPro_600SemiBold",
+    bold: "SourceSansPro_700Bold",
+    black: "SourceSansPro_900Black",
   },
-
   size: {
+    xs: 12,
+    sm: 14,
+    base: 16,
+    lg: 18,
+    xl: 20,
+    "2xl": 24,
     body: {
       xs: 12,
       sm: 14,
@@ -19,4 +27,4 @@ export const fonts = {
       xl: 36,
     },
   },
-}
+};

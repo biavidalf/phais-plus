@@ -88,12 +88,13 @@ export default function Tab() {
           <ActivityIndicator size="large" color="#F4F4F5" />
         ) : (
           <>
-            <SearchInput placeholder="Search" isDisabled={false} />
+            <SearchInput placeholder="Pesquisar" isDisabled={false} />
 
             <Filter
               tags={tags}
               selectedTags={selectedTagsId}
               setSelectedTags={setSelectedTagsId}
+              style={styles.filterContainer}
             />
 
             {requests.length ? (
@@ -165,18 +166,23 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.family.bold,
   },
   titleContainer: {
-    paddingTop: 32,
-    paddingBottom: 16,
+    paddingBottom: 12,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
   },
   titleText: {
     color: theme.colors.neutral.sec,
-    fontFamily: theme.fonts.family.medium,
-    fontSize: 17,
+    fontFamily: theme.fonts.family.semibold,
+    fontSize: theme.fonts.size.xl,
   },
   mainContainer: {
-    paddingHorizontal: 16,
+    paddingTop: 28,
+    paddingHorizontal: 20,
+  },
+  filterContainer: {
+    marginTop: 8,
+    marginBottom: 12,
   },
   createRequestIcon: {
     position: "absolute",

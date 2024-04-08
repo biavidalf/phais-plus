@@ -16,7 +16,10 @@ type ListProps = {
 
 export default function List({ data, type = "" }: ListProps) {
   return (
-    <ScrollView showsVerticalScrollIndicator={true} style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={true}
+      contentContainerStyle={{ rowGap: 8 }}
+    >
       {data.map(({ id, title, subtitle, action, status }) => (
         <ListItem
           key={id}
@@ -30,9 +33,3 @@ export default function List({ data, type = "" }: ListProps) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 12,
-  },
-});

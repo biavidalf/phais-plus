@@ -28,5 +28,6 @@ export const colors = {
     sec: "#F4F4F5",
     "200": "#E4E4E7",
     "400": "#a3a3a3",
+    transparent: "rgba(255, 255, 255, 0.5)",
   },
 };

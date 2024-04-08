@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     fontFamily: theme.fonts.family.regular,
-    fontSize: theme.fonts.size.body.md,
+    fontSize: theme.fonts.size.base,
   },
   calendarIcon: {
     position: "absolute",
