@@ -4,7 +4,7 @@ import {
   getRequestPriorities,
   getRequestStatuses,
 } from '@/api/request'
-import { getUsers } from '@/api/user'
+import userService from '@/api/user'
 import DateField from '@/components/DateField'
 import Select from '@/components/Select'
 import { TextField } from '@/components/TextField'
@@ -118,7 +118,7 @@ const CreateRequestModal = ({
     const {
       status,
       data: { data: users },
-    } = await getUsers()
+    } = await userService.index()
 
     if (status !== 200) {
       throw new Error('Erro ao carregar os usuários.')
