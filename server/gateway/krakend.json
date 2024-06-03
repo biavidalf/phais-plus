@@ -20,7 +20,7 @@
           "url_pattern": "/",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3001"],
+          "host": ["https://phais-plus-ms-user.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -38,7 +38,7 @@
           "url_pattern": "/",
           "method": "POST",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3001"],
+          "host": ["https://phais-plus-ms-user.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -56,7 +56,7 @@
           "url_pattern": "/{id}",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3001"],
+          "host": ["https://phais-plus-ms-user.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -74,7 +74,7 @@
           "url_pattern": "/{id}",
           "method": "PATCH",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3001"],
+          "host": ["https://phais-plus-ms-user.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -92,7 +92,25 @@
           "url_pattern": "/{id}",
           "method": "DELETE",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3001"],
+          "host": ["https://phais-plus-ms-user.onrender.com"],
+          "extra_config": {
+            "backend/http": {
+              "return_error_code": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "/user/authenticate",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/authenticate",
+          "method": "POST",
+          "encoding": "json",
+          "host": ["https://phais-plus-ms-user.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -110,7 +128,7 @@
           "url_pattern": "/",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3002"],
+          "host": ["https://phais-plus-ms-medicine.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -128,7 +146,7 @@
           "url_pattern": "/",
           "method": "POST",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3002"],
+          "host": ["https://phais-plus-ms-medicine.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -146,7 +164,7 @@
           "url_pattern": "/{id}",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3002"],
+          "host": ["https://phais-plus-ms-medicine.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -164,7 +182,7 @@
           "url_pattern": "/status",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3003"],
+          "host": ["https://phais-plus-ms-request.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -182,7 +200,7 @@
           "url_pattern": "/priority",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3003"],
+          "host": ["https://phais-plus-ms-request.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -200,7 +218,7 @@
           "url_pattern": "/",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3003"],
+          "host": ["https://phais-plus-ms-request.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -218,7 +236,7 @@
           "url_pattern": "/{id}",
           "method": "GET",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3003"],
+          "host": ["https://phais-plus-ms-request.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
@@ -236,7 +254,7 @@
           "url_pattern": "/",
           "method": "POST",
           "encoding": "json",
-          "host": ["http://172.22.208.1:3003"],
+          "host": ["https://phais-plus-ms-request.onrender.com"],
           "extra_config": {
             "backend/http": {
               "return_error_code": true
