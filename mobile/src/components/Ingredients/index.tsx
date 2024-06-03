@@ -1,6 +1,6 @@
-import { ScrollView, Text } from "react-native";
-import { styles } from "./styles";
-import { Ingredient } from "../Ingredient";
+import { ScrollView } from 'react-native'
+import { Ingredient } from '../Ingredient'
+import { styles } from './styles'
 
 export function Ingredients() {
   return (
@@ -8,5 +8,5 @@ export function Ingredients() {
       <Ingredient />
       <Ingredient />
     </ScrollView>
-  );
+  )
 }

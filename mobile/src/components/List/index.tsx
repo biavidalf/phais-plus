@@ -1,20 +1,20 @@
-import { StyleSheet, ScrollView } from "react-native";
-import ListItem from "./ListItem/index";
+import { ScrollView, StyleSheet } from 'react-native'
+import ListItem from './ListItem/index'
 
 type ListItem = {
-  id: string;
-  title: string;
-  subtitle: string;
-  action: string;
-  status: string;
-};
+  id: string
+  title: string
+  subtitle: string
+  action: string
+  status: string
+}
 
 type ListProps = {
-  data: ListItem[];
-  type?: string;
-};
+  data: ListItem[]
+  type?: string
+}
 
-export default function List({ data, type = "" }: ListProps) {
+export default function List({ data, type = '' }: ListProps) {
   return (
     <ScrollView showsVerticalScrollIndicator={true} style={styles.container}>
       {data.map(({ id, title, subtitle, action, status }) => (
@@ -28,11 +28,11 @@ export default function List({ data, type = "" }: ListProps) {
         />
       ))}
     </ScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 12,
   },
-});
+})

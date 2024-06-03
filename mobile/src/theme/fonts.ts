@@ -1,9 +1,9 @@
 export const fonts = {
   family: {
-    regular: "SourceSansPro_400Regular",
-    medium: "SourceSansPro_600SemiBold",
-    bold: "SourceSansPro_700Bold",
-    black: "SourceSansPro_900Black",
+    regular: 'SourceSansPro_400Regular',
+    medium: 'SourceSansPro_600SemiBold',
+    bold: 'SourceSansPro_700Bold',
+    black: 'SourceSansPro_900Black',
   },
 
   size: {
@@ -20,4 +20,4 @@ export const fonts = {
       xl: 36,
     },
   },
-};
+}

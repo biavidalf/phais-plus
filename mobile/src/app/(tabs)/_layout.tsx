@@ -1,7 +1,7 @@
-import React from "react";
-import { Feather, Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link, Tabs } from "expo-router";
-import { theme } from "@/theme";
+import { theme } from '@/theme'
+import { Feather, MaterialCommunityIcons, Octicons } from '@expo/vector-icons'
+import { Link, Tabs } from 'expo-router'
+import React from 'react'
 
 export default function TabLayout() {
   function profile() {
@@ -9,23 +9,23 @@ export default function TabLayout() {
       <Link href="/profile" style={{ paddingHorizontal: 14 }}>
         <Feather name="user" size={24} color={theme.colors.neutral.sec} />
       </Link>
-    );
+    )
   }
   return (
     <Tabs
-      initialRouteName="requests"
+      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: theme.colors.green.main,
-        tabBarInactiveTintColor: theme.colors.neutral["200"],
+        tabBarInactiveTintColor: theme.colors.neutral['200'],
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.colors.bg.main,
           height: 70,
-          borderTopColor: theme.colors.bg["layer-hover"],
+          borderTopColor: theme.colors.bg['layer-hover'],
           borderTopWidth: 2,
         },
         headerTintColor: theme.colors.neutral.sec,
-        headerTitleAlign: "center",
+        headerTitleAlign: 'center',
         headerRight: profile,
         headerStyle: {
           backgroundColor: theme.colors.green.dark,
@@ -35,9 +35,20 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Octicons name="home" size={28} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="meds"
         options={{
-          title: "Medication",
+          title: 'Medication',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="stethoscope"
@@ -49,25 +60,14 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Octicons name="home" size={28} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="requests"
         options={{
-          title: "Solicitações",
+          title: 'Solicitações',
           tabBarIcon: ({ color }) => (
             <Feather name="inbox" size={28} color={color} />
           ),
         }}
       />
     </Tabs>
-  );
+  )
 }

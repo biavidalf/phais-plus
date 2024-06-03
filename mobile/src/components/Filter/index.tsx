@@ -1,10 +1,10 @@
-import { Text, StyleSheet, ScrollView, Pressable } from "react-native";
-import { theme } from "@/theme";
+import { theme } from '@/theme'
+import { Pressable, ScrollView, StyleSheet, Text } from 'react-native'
 
 interface FilterProps {
-  tags: string[];
-  selectedTags: number[];
-  setSelectedTags: React.Dispatch<React.SetStateAction<never[]>>;
+  tags: string[]
+  selectedTags: number[]
+  setSelectedTags: React.Dispatch<React.SetStateAction<never[]>>
 }
 
 export default function Filter({
@@ -15,12 +15,12 @@ export default function Filter({
   const handlePress = (index: any) => {
     setSelectedTags((prevState: any) => {
       if (prevState.includes(index)) {
-        return prevState.filter((i: any) => i !== index);
+        return prevState.filter((i: any) => i !== index)
       } else {
-        return [...prevState, index];
+        return [...prevState, index]
       }
-    });
-  };
+    })
+  }
 
   return (
     <ScrollView
@@ -42,7 +42,7 @@ export default function Filter({
           </Pressable>
         ))}
     </ScrollView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   filterItem: {
     paddingHorizontal: 16,
     paddingVertical: 6,
-    backgroundColor: theme.colors.bg["layer-hover"],
+    backgroundColor: theme.colors.bg['layer-hover'],
     borderRadius: 4,
     marginRight: 6,
   },
@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.bg.sec,
   },
   notPressed: {
-    backgroundColor: theme.colors.bg["layer-hover"],
+    backgroundColor: theme.colors.bg['layer-hover'],
   },
-});
+})

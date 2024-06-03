@@ -1,34 +1,34 @@
-import { useState } from "react";
-import { Alert, Button, ScrollView, Text, TextInput, View } from "react-native";
-import { io } from "socket.io-client";
+import { useState } from 'react'
+import { Alert, Button, ScrollView, Text, TextInput, View } from 'react-native'
+import { io } from 'socket.io-client'
 
-const URL = "http://192.168.239.205:3003";
-const socket = io(URL);
+const URL = 'http://192.168.239.205:3003'
+const socket = io(URL)
 
 type Message = {
-  author: string;
-  message: string;
-};
+  author: string
+  message: string
+}
 
 export default function Chat() {
-  const [author, setAuthor] = useState<string>("Usuário");
-  const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [author, setAuthor] = useState<string>('Usuário')
+  const [message, setMessage] = useState<string>('')
+  const [messages, setMessages] = useState<Message[]>([])
 
-  socket.on("previousMessages", (data: Message) => {
-    Alert.alert(JSON.stringify(messages));
-    setMessages([...messages, data]);
-  });
+  socket.on('previousMessages', (data: Message) => {
+    Alert.alert(JSON.stringify(messages))
+    setMessages([...messages, data])
+  })
 
-  socket.on("receivedMessage", (data: Message) => {
-    setMessages([...messages, data]);
-  });
+  socket.on('receivedMessage', (data: Message) => {
+    setMessages([...messages, data])
+  })
 
   const sendMessage = () => {
-    socket.emit("sendMessage", { author, message });
-    setMessages([...messages, { author, message }]);
-    setMessage("");
-  };
+    socket.emit('sendMessage', { author, message })
+    setMessages([...messages, { author, message }])
+    setMessage('')
+  }
 
   return (
     <View
@@ -42,13 +42,13 @@ export default function Chat() {
           </Text>
         ))}
       </ScrollView>
-      <Text style={{ fontWeight: "700" }}>Autor:</Text>
+      <Text style={{ fontWeight: '700' }}>Autor:</Text>
       <TextInput
         value={author}
         onChangeText={setAuthor}
         placeholder="Nome do autor"
       />
-      <Text style={{ fontWeight: "700" }}>Mensagem:</Text>
+      <Text style={{ fontWeight: '700' }}>Mensagem:</Text>
       <TextInput
         value={message}
         onChangeText={setMessage}
@@ -56,5 +56,5 @@ export default function Chat() {
       />
       <Button title="Enviar" onPress={sendMessage} />
     </View>
-  );
+  )
 }

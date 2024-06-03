@@ -7,136 +7,136 @@ import {
   Button,
   Alert,
   ActivityIndicator,
-} from "react-native";
+} from 'react-native'
 import DateTimePicker, {
   DateTimePickerAndroid,
   DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+} from '@react-native-community/datetimepicker'
 
-import { theme } from "@/theme";
+import { theme } from '@/theme'
 
-import Select from "@/components/Select";
-import SearchInput from "@/components/SearchInput";
-import { useEffect, useState } from "react";
-import DateField from "@/components/DateField";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useLocalSearchParams } from "expo-router";
-import { getRequest, getRequestStatuses, updateRequest } from "@/api/request";
-import { ItemValue } from "@react-native-picker/picker/typings/Picker";
+import Select from '@/components/Select'
+import SearchInput from '@/components/SearchInput'
+import { useEffect, useState } from 'react'
+import DateField from '@/components/DateField'
+import { Ionicons } from '@expo/vector-icons'
+import { Link, useLocalSearchParams } from 'expo-router'
+import { getRequest, getRequestStatuses, updateRequest } from '@/api/request'
+import { ItemValue } from '@react-native-picker/picker/typings/Picker'
 
 type Request = {
-  id: string;
-  requester_hospital: { name: string };
-  quantity: string;
-  medicine: { name: string };
-  status: { id: string };
-  due_date: string;
-  return_date: string;
-  description: string;
-  created_at: string;
-};
+  id: string
+  requester_hospital: { name: string }
+  quantity: string
+  medicine: { name: string }
+  status: { id: string }
+  due_date: string
+  return_date: string
+  description: string
+  created_at: string
+}
 
-type Status = { id: string; name: string };
+type Status = { id: string; name: string }
 
 export default function Request() {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams()
 
-  const [loading, setLoading] = useState<boolean>(true);
-  const [returnDate, setReturnDate] = useState<Date>(new Date());
-  const [request, setRequest] = useState<Request | null>(null);
-  const [statuses, setStatuses] = useState<Status[]>([]);
+  const [loading, setLoading] = useState<boolean>(true)
+  const [returnDate, setReturnDate] = useState<Date>(new Date())
+  const [request, setRequest] = useState<Request | null>(null)
+  const [statuses, setStatuses] = useState<Status[]>([])
 
-  const [selectedStatus, setSelectedStatus] = useState<string>();
+  const [selectedStatus, setSelectedStatus] = useState<string>()
 
   const loadRequest = async () => {
     const {
       status,
       data: { data: request },
-    } = await getRequest(id.toString());
+    } = await getRequest(id.toString())
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar a solicitação.");
+      throw new Error('Erro ao carregar a solicitação.')
     }
 
-    setRequest(request);
-    setSelectedStatus(request.status.id);
-  };
+    setRequest(request)
+    setSelectedStatus(request.status.id)
+  }
 
   const loadStatuses = async () => {
     const {
       status,
       data: { data: statuses },
-    } = await getRequestStatuses();
+    } = await getRequestStatuses()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar os status.");
+      throw new Error('Erro ao carregar os status.')
     }
 
-    setStatuses(statuses);
-  };
+    setStatuses(statuses)
+  }
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        Promise.all([loadRequest(), loadStatuses()]);
+        Promise.all([loadRequest(), loadStatuses()])
       } catch (error) {
         Alert.alert(
-          "Erro",
+          'Erro',
           error instanceof Error
             ? error.message
-            : "Erro interno ao carregar as solicitações."
-        );
+            : 'Erro interno ao carregar as solicitações.',
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   const formatDate = (date: Date) => {
-    const month = String(date.getMonth() + 1);
-    const day = String(date.getDate());
-    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1)
+    const day = String(date.getDate())
+    const year = String(date.getFullYear())
 
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-  };
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  }
 
   const onChangeReturnDate = async (
     event: DateTimePickerEvent,
-    selectedDate?: Date
+    selectedDate?: Date,
   ) => {
     if (!request || !selectedDate) {
-      Alert.alert("Erro", "Erro ao selecionar a data de devolução.");
-      return;
+      Alert.alert('Erro', 'Erro ao selecionar a data de devolução.')
+      return
     }
 
     await updateRequest(request.id, {
       return_date: formatDate(selectedDate),
-    });
-    setReturnDate(selectedDate);
-    Alert.alert("Data de devolução atualizada com sucesso!");
-  };
+    })
+    setReturnDate(selectedDate)
+    Alert.alert('Data de devolução atualizada com sucesso!')
+  }
 
   const onChangeStatus = async (value: ItemValue) => {
     if (!request) {
-      Alert.alert("Erro", "Erro ao atualizar a situação da solicitação.");
-      return;
+      Alert.alert('Erro', 'Erro ao atualizar a situação da solicitação.')
+      return
     }
 
     await updateRequest(request.id, {
       status_id: value.toString(),
-    });
+    })
 
-    setSelectedStatus(value.toString());
-    Alert.alert("Situação atualizada com sucesso!");
-  };
+    setSelectedStatus(value.toString())
+    Alert.alert('Situação atualizada com sucesso!')
+  }
 
   const showDatePicker = () => {
     DateTimePickerAndroid.open({
-      mode: "date",
+      mode: 'date',
       value: returnDate,
       onChange: onChangeReturnDate,
-    });
-  };
+    })
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -151,7 +151,7 @@ export default function Request() {
           <>
             <View style={styles.dataContainer}>
               <Text style={styles.titleText}>
-                #{request.id.substring(0, 4)} -{" "}
+                #{request.id.substring(0, 4)} -{' '}
                 {request.requester_hospital.name}
               </Text>
 
@@ -182,7 +182,7 @@ export default function Request() {
                   <Select
                     options={(() =>
                       statuses.map(({ id, name }) => {
-                        return { label: name, value: id };
+                        return { label: name, value: id }
                       }))()}
                     selectedValue={selectedStatus}
                     onValueChange={onChangeStatus}
@@ -224,11 +224,11 @@ export default function Request() {
 
             <View style={styles.creationInfoContainer}>
               <Text style={styles.creationInfoText}>
-                Criado por {request.requester_hospital.name} às{" "}
-                {new Date(request.created_at).toLocaleDateString("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
+                Criado por {request.requester_hospital.name} às{' '}
+                {new Date(request.created_at).toLocaleDateString('pt-BR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
                 })}
               </Text>
             </View>
@@ -245,7 +245,7 @@ export default function Request() {
       </Link>
       <StatusBar backgroundColor={theme.colors.green.dark} />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -272,8 +272,8 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   doubleColumnContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     gap: 40,
   },
   groupContainer: {
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.size.heading.sm,
   },
   creationInfoContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 20,
     left: 14,
   },
@@ -300,11 +300,11 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.size.heading.xs,
   },
   chatIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 64,
     right: 32,
     padding: 18,
     borderRadius: 99,
     backgroundColor: theme.colors.green.dark,
   },
-});
+})

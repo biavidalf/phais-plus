@@ -1,81 +1,79 @@
-import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  Button,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-
-import { colors } from "@/theme/colors";
-import { Ionicons } from "@expo/vector-icons";
-import { TextField } from "@/components/TextField";
-import DateField from "@/components/DateField";
-import { getMedicines } from "@/api/medicine";
-import Select from "@/components/Select";
-import { ItemValue } from "@react-native-picker/picker/typings/Picker";
+import { getMedicines } from '@/api/medicine'
 import {
   createRequest,
   getRequestPriorities,
   getRequestStatuses,
-} from "@/api/request";
-import { getUsers } from "@/api/user";
-import { Request } from "./(tabs)/requests";
+} from '@/api/request'
+import { getUsers } from '@/api/user'
+import DateField from '@/components/DateField'
+import Select from '@/components/Select'
+import { TextField } from '@/components/TextField'
+import { colors } from '@/theme/colors'
+import { Ionicons } from '@expo/vector-icons'
+import { yupResolver } from '@hookform/resolvers/yup'
+import {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker'
+import { ItemValue } from '@react-native-picker/picker/typings/Picker'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import {
+  ActivityIndicator,
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
+import * as Yup from 'yup'
+import { Request } from './(tabs)/requests'
 
 type CreateRequestModalProps = {
-  addRequest: (request: Request) => void;
-  modalVisibleState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-};
+  addRequest: (request: Request) => void
+  modalVisibleState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+}
 
 type FormValues = {
-  requester_hospital_id: string;
-  medicine_id: string;
-  priority_id: string;
-  status_id: string;
-  quantity: number;
-  due_date: Date;
-  return_date: Date;
-  description: string;
-};
+  requester_hospital_id: string
+  medicine_id: string
+  priority_id: string
+  status_id: string
+  quantity: number
+  due_date: Date
+  return_date: Date
+  description: string
+}
 
-type User = { id: string; username: string };
-type Medicine = { id: string; name: string };
-type Priority = { id: string; name: string };
+type User = { id: string; username: string }
+type Medicine = { id: string; name: string }
+type Priority = { id: string; name: string }
 
 const initialValues = {
-  requester_hospital_id: "",
-  medicine_id: "",
-  priority_id: "",
-  status_id: "",
+  requester_hospital_id: '',
+  medicine_id: '',
+  priority_id: '',
+  status_id: '',
   quantity: undefined,
   due_date: new Date(),
   return_date: new Date(),
   description: undefined,
-};
+}
 
 const requestSchema = Yup.object({
-  requester_hospital_id: Yup.string().required("Hospital é obrigatório"),
-  medicine_id: Yup.string().required("Medicamento é obrigatório"),
-  priority_id: Yup.string().required("Prioridade é obrigatória"),
-  status_id: Yup.string().required("Situação é obrigatória"),
+  requester_hospital_id: Yup.string().required('Hospital é obrigatório'),
+  medicine_id: Yup.string().required('Medicamento é obrigatório'),
+  priority_id: Yup.string().required('Prioridade é obrigatória'),
+  status_id: Yup.string().required('Situação é obrigatória'),
   quantity: Yup.number()
-    .min(1, "Quantidade deve ser maior que 0")
-    .required("Quantidade é obrigatória"),
-  due_date: Yup.date().required("Data de vencimento é obrigatória"),
-  return_date: Yup.date().required("Data de retorno é obrigatória"),
-  description: Yup.string().required("Descrição é obrigatória"),
-});
+    .min(1, 'Quantidade deve ser maior que 0')
+    .required('Quantidade é obrigatória'),
+  due_date: Yup.date().required('Data de vencimento é obrigatória'),
+  return_date: Yup.date().required('Data de retorno é obrigatória'),
+  description: Yup.string().required('Descrição é obrigatória'),
+})
 
 const CreateRequestModal = ({
   addRequest,
@@ -90,122 +88,122 @@ const CreateRequestModal = ({
   } = useForm<FormValues>({
     resolver: yupResolver(requestSchema),
     defaultValues: initialValues,
-  });
-  const [modalVisible, setModalVisible] = modalVisibleState;
+  })
+  const [modalVisible, setModalVisible] = modalVisibleState
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true)
 
-  const [dueDate, setDueDate] = useState<Date>(getValues().due_date);
-  const [returnDate, setReturnDate] = useState<Date>(getValues().return_date);
+  const [dueDate, setDueDate] = useState<Date>(getValues().due_date)
+  const [returnDate, setReturnDate] = useState<Date>(getValues().return_date)
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [medicines, setMedicines] = useState<Medicine[]>([]);
-  const [priorities, setPriorities] = useState<Priority[]>([]);
-  const [statuses, setStatuses] = useState<Priority[]>([]);
+  const [users, setUsers] = useState<User[]>([])
+  const [medicines, setMedicines] = useState<Medicine[]>([])
+  const [priorities, setPriorities] = useState<Priority[]>([])
+  const [statuses, setStatuses] = useState<Priority[]>([])
 
   const [selectedUser, setSelectedUser] = useState<string>(
-    getValues().requester_hospital_id
-  );
+    getValues().requester_hospital_id,
+  )
   const [selectedMedicine, setSelectedMedicine] = useState<string>(
-    getValues().medicine_id
-  );
+    getValues().medicine_id,
+  )
   const [selectedPriority, setSelectedPriority] = useState<string>(
-    getValues().priority_id
-  );
+    getValues().priority_id,
+  )
   const [selectedStatus, setSelectedStatus] = useState<string>(
-    getValues().status_id
-  );
+    getValues().status_id,
+  )
 
   const loadUsers = async () => {
     const {
       status,
       data: { data: users },
-    } = await getUsers();
+    } = await getUsers()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar os usuários.");
+      throw new Error('Erro ao carregar os usuários.')
     }
 
-    setUsers(users);
-  };
+    setUsers(users)
+  }
 
   const loadMedicines = async () => {
     const {
       status,
       data: { data: medicines },
-    } = await getMedicines();
+    } = await getMedicines()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar as solicitações.");
+      throw new Error('Erro ao carregar as solicitações.')
     }
 
-    setMedicines(medicines);
-  };
+    setMedicines(medicines)
+  }
 
   const loadPriorities = async () => {
     const {
       status,
       data: { data: priorities },
-    } = await getRequestPriorities();
+    } = await getRequestPriorities()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar as prioridades.");
+      throw new Error('Erro ao carregar as prioridades.')
     }
 
-    setPriorities(priorities);
-  };
+    setPriorities(priorities)
+  }
 
   const loadStatuses = async () => {
     const {
       status,
       data: { data: statuses },
-    } = await getRequestStatuses();
+    } = await getRequestStatuses()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar os status.");
+      throw new Error('Erro ao carregar os status.')
     }
 
-    setStatuses(statuses);
-  };
+    setStatuses(statuses)
+  }
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         await Promise.all([
           loadUsers(),
           loadMedicines(),
           loadPriorities(),
           loadStatuses(),
-        ]);
+        ])
       } catch (error) {
         Alert.alert(
-          "Erro",
+          'Erro',
           error instanceof Error
             ? error.message
-            : "Erro interno ao carregar as solicitações."
-        );
+            : 'Erro interno ao carregar as solicitações.',
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
+    })()
 
-    register("requester_hospital_id");
-    register("medicine_id");
-    register("priority_id");
-    register("status_id");
-    register("quantity");
-    register("due_date");
-    register("return_date");
-    register("description");
-  }, []);
+    register('requester_hospital_id')
+    register('medicine_id')
+    register('priority_id')
+    register('status_id')
+    register('quantity')
+    register('due_date')
+    register('return_date')
+    register('description')
+  }, [])
 
   const formatDate = (date: Date) => {
-    const month = String(date.getMonth() + 1);
-    const day = String(date.getDate());
-    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1)
+    const day = String(date.getDate())
+    const year = String(date.getFullYear())
 
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-  };
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  }
 
   const onSubmit = async ({
     requester_hospital_id,
@@ -227,84 +225,84 @@ const CreateRequestModal = ({
         description,
         due_date: formatDate(due_date),
         return_date: formatDate(return_date),
-      };
+      }
 
       const {
         status,
         data: { data: request },
-      } = await createRequest(data);
+      } = await createRequest(data)
 
       if (status !== 200) {
-        throw new Error("Erro ao criar a solicitação.");
+        throw new Error('Erro ao criar a solicitação.')
       }
 
-      addRequest(request);
+      addRequest(request)
 
-      Alert.alert("Sucesso", "Solicitação criada com sucesso.");
-      setModalVisible(false);
+      Alert.alert('Sucesso', 'Solicitação criada com sucesso.')
+      setModalVisible(false)
     } catch (error) {
       Alert.alert(
-        "Erro",
+        'Erro',
         error instanceof Error
           ? error.message
-          : "Erro interno ao criar a solicitação."
-      );
+          : 'Erro interno ao criar a solicitação.',
+      )
     }
-  };
+  }
 
   const onChangeUser = (value: ItemValue) => {
-    setValue("requester_hospital_id", value.toString());
-    setSelectedUser(value.toString());
-  };
+    setValue('requester_hospital_id', value.toString())
+    setSelectedUser(value.toString())
+  }
 
   const onChangeMedicine = (value: ItemValue) => {
-    setValue("medicine_id", value.toString());
-    setSelectedMedicine(value.toString());
-  };
+    setValue('medicine_id', value.toString())
+    setSelectedMedicine(value.toString())
+  }
 
   const onChangePriority = (value: ItemValue) => {
-    setValue("priority_id", value.toString());
-    setSelectedPriority(value.toString());
-  };
+    setValue('priority_id', value.toString())
+    setSelectedPriority(value.toString())
+  }
 
   const onChangeStatus = (value: ItemValue) => {
-    setValue("status_id", value.toString());
-    setSelectedStatus(value.toString());
-  };
+    setValue('status_id', value.toString())
+    setSelectedStatus(value.toString())
+  }
 
   const onChangeDueDate = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (!selectedDate) {
-      return;
+      return
     }
 
-    setValue("due_date", selectedDate);
-    setDueDate(selectedDate);
-  };
+    setValue('due_date', selectedDate)
+    setDueDate(selectedDate)
+  }
 
   const onChangeReturnDate = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (!selectedDate) {
-      return;
+      return
     }
 
-    setValue("return_date", selectedDate);
-    setReturnDate(selectedDate);
-  };
+    setValue('return_date', selectedDate)
+    setReturnDate(selectedDate)
+  }
 
   const showDueDatePicker = () => {
     DateTimePickerAndroid.open({
       onChange: onChangeDueDate,
-      mode: "date",
+      mode: 'date',
       value: getValues().due_date,
-    });
-  };
+    })
+  }
 
   const showReturnDatePicker = () => {
     DateTimePickerAndroid.open({
       onChange: onChangeReturnDate,
-      mode: "date",
+      mode: 'date',
       value: getValues().return_date,
-    });
-  };
+    })
+  }
 
   return (
     <View style={styles.centeredView}>
@@ -313,8 +311,8 @@ const CreateRequestModal = ({
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+          Alert.alert('Modal has been closed.')
+          setModalVisible(!modalVisible)
         }}
       >
         <View style={styles.centeredView}>
@@ -343,9 +341,9 @@ const CreateRequestModal = ({
                       options={(() =>
                         users
                           .map(({ id, username }) => {
-                            return { label: username, value: id };
+                            return { label: username, value: id }
                           })
-                          .concat({ label: "", value: "" }))()}
+                          .concat({ label: '', value: '' }))()}
                       onValueChange={onChangeUser}
                     />
                   </View>
@@ -358,9 +356,9 @@ const CreateRequestModal = ({
                       options={(() =>
                         medicines
                           .map(({ id, name }) => {
-                            return { label: name, value: id };
+                            return { label: name, value: id }
                           })
-                          .concat({ label: "", value: "" }))()}
+                          .concat({ label: '', value: '' }))()}
                       onValueChange={onChangeMedicine}
                       style={{ flex: 2 }}
                     />
@@ -372,7 +370,7 @@ const CreateRequestModal = ({
                       keyboardType="numeric"
                       error={errors?.quantity}
                       onChangeText={(value) =>
-                        setValue("quantity", Number(value))
+                        setValue('quantity', Number(value))
                       }
                     />
                   </View>
@@ -385,9 +383,9 @@ const CreateRequestModal = ({
                       options={(() =>
                         priorities
                           .map(({ id, name }) => {
-                            return { label: name, value: id };
+                            return { label: name, value: id }
                           })
-                          .concat({ label: "", value: "" }))()}
+                          .concat({ label: '', value: '' }))()}
                       onValueChange={onChangePriority}
                     />
 
@@ -398,9 +396,9 @@ const CreateRequestModal = ({
                       options={(() =>
                         statuses
                           .map(({ id, name }) => {
-                            return { label: name, value: id };
+                            return { label: name, value: id }
                           })
-                          .concat({ label: "", value: "" }))()}
+                          .concat({ label: '', value: '' }))()}
                       onValueChange={onChangeStatus}
                       style={{ flex: 1.5 }}
                     />
@@ -427,7 +425,7 @@ const CreateRequestModal = ({
                     placeholder="Informações importantes da solicitação"
                     placeholderTextColor={colors.green.transp}
                     error={errors?.description}
-                    onChangeText={(value) => setValue("description", value)}
+                    onChangeText={(value) => setValue('description', value)}
                   />
                 </ScrollView>
 
@@ -449,17 +447,17 @@ const CreateRequestModal = ({
         </View>
       </Modal>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   modalView: {
-    width: "100%",
+    width: '100%',
     backgroundColor: colors.bg.dark,
     borderTopStartRadius: 16,
     borderTopEndRadius: 16,
@@ -467,18 +465,18 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   doubleColumnContainer: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     gap: 12,
   },
   bodyContainer: {
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     gap: 16,
     marginTop: 16,
     marginBottom: 24,
@@ -491,14 +489,14 @@ const styles = StyleSheet.create({
   createRequestText: {
     color: colors.neutral[200],
     fontSize: 20,
-    fontFamily: "SourceSansPro_600SemiBold",
-    textAlign: "center",
+    fontFamily: 'SourceSansPro_600SemiBold',
+    textAlign: 'center',
   },
   modalTitle: {
     color: colors.neutral[200],
     fontSize: 24,
-    fontFamily: "SourceSansPro_600SemiBold",
+    fontFamily: 'SourceSansPro_600SemiBold',
   },
-});
+})
 
-export default CreateRequestModal;
+export default CreateRequestModal

@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import { theme } from "@/theme";
-import { TextField } from "@/components/TextField";
-import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    Button, 
-    ScrollView,
-    Dimensions,
-    Image 
-} from 'react-native';
+import { TextField } from '@/components/TextField'
+import { theme } from '@/theme'
+import React, { useState } from 'react'
+import {
+  Button,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 
 const RegistrationScreen = () => {
-  const [cnpj, setCnpj] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
+  const [cnpj, setCnpj] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [name, setName] = useState('')
 
-  const { width } = Dimensions.get("window");
+  const { width } = Dimensions.get('window')
 
   const handleSubmit = () => {
-    alert('Cadastro submetido!');
-  };
+    alert('Cadastro submetido!')
+  }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-      <Image
-        style={{
-          alignSelf: "center",
-        }}
-        source={require("../../assets/logo_tela_login.png")}
-      ></Image>
+        <Image
+          style={{
+            alignSelf: 'center',
+          }}
+          source={require('../../assets/logo_tela_login.png')}
+        ></Image>
       </View>
       <Text style={styles.description}>Quer utilizar nosso sistema?</Text>
-      <Text style={styles.description}>Entre em contato conosco!</Text> 
+      <Text style={styles.description}>Entre em contato conosco!</Text>
 
       <View style={styles.inputContainer}>
         <TextField
@@ -72,18 +72,14 @@ const RegistrationScreen = () => {
             width: width * 0.6,
           }}
         >
-          <Button
-            title="Solicitar"
-            onPress={handleSubmit}
-            color={"#7EB09B"}
-          />
+          <Button title="Solicitar" onPress={handleSubmit} color={'#7EB09B'} />
         </View>
       </View>
 
       <Text style={styles.link}>Já possui uma conta?</Text>
     </ScrollView>
-  );
-};
+  )
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -130,8 +126,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     marginLeft: 30,
-    textDecorationLine: 'underline' 
-  }
-});
+    textDecorationLine: 'underline',
+  },
+})
 
-export default RegistrationScreen;
+export default RegistrationScreen

@@ -1,10 +1,10 @@
-import { View, TextInput, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { theme } from "@/theme";
+import { theme } from '@/theme'
+import { Feather } from '@expo/vector-icons'
+import { StyleSheet, TextInput, View } from 'react-native'
 
 interface SearchInputProps {
-  placeholder: string;
-  isDisabled: boolean;
+  placeholder: string
+  isDisabled: boolean
 }
 
 export default function SearchInput({
@@ -19,19 +19,19 @@ export default function SearchInput({
           isDisabled && { backgroundColor: theme.colors.grays.disabled },
         ]}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.neutral["400"]}
+        placeholderTextColor={theme.colors.neutral['400']}
       />
 
       <View style={styles.searchIcon}>
-        <Feather name="search" size={24} color={theme.colors.neutral["400"]} />
+        <Feather name="search" size={24} color={theme.colors.neutral['400']} />
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
   },
   searchInput: {
     backgroundColor: theme.colors.bg.layer,
@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.size.body.md,
   },
   searchIcon: {
-    position: "absolute",
+    position: 'absolute',
     right: 20,
     top: 10,
   },
-});
+})

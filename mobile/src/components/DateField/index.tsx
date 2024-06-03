@@ -1,21 +1,21 @@
+import { theme } from '@/theme'
+import { colors } from '@/theme/colors'
+import { Feather } from '@expo/vector-icons'
 import {
-  View,
-  Text,
-  StyleSheet,
   Pressable,
   StyleProp,
+  StyleSheet,
+  Text,
   TextStyle,
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { theme } from "@/theme";
-import { colors } from "@/theme/colors";
+  View,
+} from 'react-native'
 
 type DateFieldProps = {
-  date: Date;
-  label?: string;
-  showDatePicker?: () => void;
-  style?: StyleProp<TextStyle>;
-};
+  date: Date
+  label?: string
+  showDatePicker?: () => void
+  style?: StyleProp<TextStyle>
+}
 
 export default function DateField({
   date,
@@ -34,12 +34,12 @@ export default function DateField({
           <Feather
             name="calendar"
             size={24}
-            color={theme.colors.neutral["400"]}
+            color={theme.colors.neutral['400']}
           />
         </View>
       </View>
     </Pressable>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    position: "relative",
+    position: 'relative',
     backgroundColor: theme.colors.bg.layer,
     paddingHorizontal: 20,
     paddingVertical: 12,
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.size.body.md,
   },
   calendarIcon: {
-    position: "absolute",
+    position: 'absolute',
     right: 20,
     top: 10,
   },
   label: {
     color: colors.neutral[200],
     fontSize: 18,
-    fontFamily: "SourceSansPro_400Regular",
+    fontFamily: 'SourceSansPro_400Regular',
   },
-});
+})

@@ -1,75 +1,74 @@
+import { getRequests } from '@/api/request'
+import Filter from '@/components/Filter'
+import List from '@/components/List'
+import SearchInput from '@/components/SearchInput'
+import { theme } from '@/theme'
+import { Ionicons } from '@expo/vector-icons'
+import React, { useEffect, useState } from 'react'
 import {
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  StatusBar,
-  Alert,
   ActivityIndicator,
+  Alert,
   Pressable,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import SearchInput from "@/components/SearchInput";
-import Filter from "@/components/Filter";
-import List from "@/components/List";
-
-import { theme } from "@/theme";
-import { Ionicons } from "@expo/vector-icons";
-import { getRequests } from "@/api/request";
-import CreateRequestModal from "../create_request_modal";
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
+import CreateRequestModal from '../create_request_modal'
 
 export type Request = {
-  id: string;
-  medicine: { name: string };
-  requester_hospital: { name: string };
-  status: { name: string };
-  priority: { name: string };
-};
+  id: string
+  medicine: { name: string }
+  requester_hospital: { name: string }
+  status: { name: string }
+  priority: { name: string }
+}
 
 export default function Tab() {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [selectedTagsId, setSelectedTagsId] = useState([]);
-  const tags = ["Aberto", "Negociação", "Urgente", "Abertos hoje"];
+  const [loading, setLoading] = useState<boolean>(true)
+  const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [requests, setRequests] = useState<Request[]>([])
+  const [selectedTagsId, setSelectedTagsId] = useState([])
+  const tags = ['Aberto', 'Negociação', 'Urgente', 'Abertos hoje']
 
   const loadRequests = async () => {
     const {
       status,
       data: { data: requests },
-    } = await getRequests();
+    } = await getRequests()
 
     if (status !== 200) {
-      throw new Error("Erro ao carregar as solicitações.");
+      throw new Error('Erro ao carregar as solicitações.')
     }
 
-    setRequests(requests);
-  };
+    setRequests(requests)
+  }
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
-        await loadRequests();
+        await loadRequests()
       } catch (error) {
         Alert.alert(
-          "Erro",
+          'Erro',
           error instanceof Error
             ? error.message
-            : "Erro interno ao carregar as solicitações."
-        );
+            : 'Erro interno ao carregar as solicitações.',
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   // function getSelectedTags() {
   //   return selectedTagsId.map((id) => tags[id]);
   // }
 
   const addRequest = (request: Request) => {
-    setRequests([...requests, request]);
-  };
+    setRequests([...requests, request])
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -108,15 +107,15 @@ export default function Tab() {
                       priority,
                     }) => {
                       const item = {
-                        id: id,
+                        id,
                         title: `#${id.substring(0, 4)} - ${medicine.name}`,
                         subtitle: requester_hospital.name,
                         action: status.name,
                         status: priority.name,
-                      };
-                      return item;
-                    }
-                  );
+                      }
+                      return item
+                    },
+                  )
                 })()}
               />
             ) : (
@@ -150,7 +149,7 @@ export default function Tab() {
 
       <StatusBar backgroundColor={theme.colors.green.dark} />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -160,15 +159,15 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     color: theme.colors.neutral.sec,
     fontFamily: theme.fonts.family.bold,
   },
   titleContainer: {
     paddingTop: 32,
     paddingBottom: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   titleText: {
     color: theme.colors.neutral.sec,
@@ -179,11 +178,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   createRequestIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     right: 30,
     padding: 18,
     borderRadius: 99,
     backgroundColor: theme.colors.green.dark,
   },
-});
+})

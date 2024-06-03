@@ -1,16 +1,16 @@
-import { View, StyleSheet, Text } from "react-native";
-import { Picker, PickerProps } from "@react-native-picker/picker";
-import { theme } from "@/theme";
-import { colors } from "@/theme/colors";
-import { FieldError } from "react-hook-form";
+import { theme } from '@/theme'
+import { colors } from '@/theme/colors'
+import { Picker, PickerProps } from '@react-native-picker/picker'
+import { FieldError } from 'react-hook-form'
+import { StyleSheet, Text, View } from 'react-native'
 
-type SelectOption = { label: string; value: string };
+type SelectOption = { label: string; value: string }
 type SelectProps = {
-  label?: string;
-  error?: FieldError;
-  options: SelectOption[];
-  selectedValue: any;
-} & PickerProps;
+  label?: string
+  error?: FieldError
+  options: SelectOption[]
+  selectedValue: any
+} & PickerProps
 
 export default function Select({
   label,
@@ -20,7 +20,7 @@ export default function Select({
   selectedValue,
   ...otherProps
 }: SelectProps) {
-  console.log(options);
+  console.log(options)
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -39,19 +39,19 @@ export default function Select({
               value={value}
               style={styles.pickerItem}
             />
-          );
+          )
         })}
       </Picker>
       {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     gap: 4,
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
     flex: 1,
   },
   input: {
@@ -63,16 +63,16 @@ const styles = StyleSheet.create({
   pickerItem: {
     backgroundColor: theme.colors.bg.layer,
     color: theme.colors.neutral.sec,
-    width: "100%",
+    width: '100%',
   },
   label: {
     color: colors.neutral[200],
     fontSize: 18,
-    fontFamily: "SourceSansPro_400Regular",
+    fontFamily: 'SourceSansPro_400Regular',
   },
   errorMessage: {
     color: colors.others.red,
     fontSize: 14,
-    fontFamily: "SourceSansPro_400Regular",
+    fontFamily: 'SourceSansPro_400Regular',
   },
-});
+})

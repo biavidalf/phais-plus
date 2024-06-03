@@ -1,4 +1,6 @@
-import { TextField } from "@/components/TextField";
+import { TextField } from '@/components/TextField'
+import { theme } from '@/theme'
+import React, { useState } from 'react'
 import {
   Alert,
   Button,
@@ -7,14 +9,12 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import React, { useState } from "react";
-import { theme } from "@/theme";
+} from 'react-native'
 
 const LoginScreen: React.FC = () => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const { width } = Dimensions.get("window");
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const { width } = Dimensions.get('window')
 
   return (
     <View
@@ -23,12 +23,12 @@ const LoginScreen: React.FC = () => {
         flex: 1,
       }}
     >
-      <Image source={require("../../assets/back_button.png")}></Image>
+      <Image source={require('../../assets/back_button.png')}></Image>
       <Image
         style={{
-          alignSelf: "center",
+          alignSelf: 'center',
         }}
-        source={require("../../assets/logo_tela_login.png")}
+        source={require('../../assets/logo_tela_login.png')}
       ></Image>
       <Text style={styles.titleText}>Bem-vindo!</Text>
       <Text
@@ -36,7 +36,7 @@ const LoginScreen: React.FC = () => {
           color: theme.colors.neutral.sec,
           fontFamily: theme.fonts.family.medium,
           fontSize: 17,
-          textAlign: "center",
+          textAlign: 'center',
         }}
       >
         Acesse o sistema da Empresa:
@@ -67,46 +67,46 @@ const LoginScreen: React.FC = () => {
           }}
         >
           <Button
-            onPress={() => Alert.alert("button prossed")}
+            onPress={() => Alert.alert('button prossed')}
             title="Acessar"
-            color={"#7EB09B"}
+            color={'#7EB09B'}
           ></Button>
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.bg.main,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paragraph: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
     color: theme.colors.neutral.sec,
     fontFamily: theme.fonts.family.bold,
   },
   titleContainer: {
     paddingTop: 32,
     paddingBottom: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   titleText: {
     color: theme.colors.neutral.sec,
     fontFamily: theme.fonts.family.medium,
     fontSize: 17,
-    textAlign: "center",
+    textAlign: 'center',
   },
   mainContainer: {
     paddingHorizontal: 16,
   },
   createRequestIcon: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     right: 30,
     padding: 18,
@@ -115,9 +115,9 @@ const styles = StyleSheet.create({
   },
   container_button: {
     backgroundColor: theme.colors.bg.main,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-});
+})
 
-export default LoginScreen;
+export default LoginScreen

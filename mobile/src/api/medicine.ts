@@ -1,5 +1,5 @@
-import { api } from ".";
+import { api } from '.'
 
 export const getMedicines = async () => {
-  return await api.get("/medicine");
-};
+  return await api.get('/medicine')
+}

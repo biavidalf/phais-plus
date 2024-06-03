@@ -1,14 +1,14 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import { theme } from "@/theme";
-import { Link } from "expo-router";
+import { theme } from '@/theme'
+import { Feather, Ionicons } from '@expo/vector-icons'
+import { Link } from 'expo-router'
+import { StyleSheet, Text, View } from 'react-native'
 
 interface ListItemProps {
-  id: string;
-  title: string;
-  subtitle: string;
-  action: string;
-  status: string;
+  id: string
+  title: string
+  subtitle: string
+  action: string
+  status: string
 }
 
 export default function ListItem({
@@ -41,32 +41,32 @@ export default function ListItem({
         </View>
       </Link>
     </View>
-  );
+  )
 }
 
 function getIndicatorColor(status: string) {
-  if (status == "Alta") return theme.colors.others.red;
+  if (status == 'Alta') return theme.colors.others.red
 
-  if (status == "Média") return theme.colors.others.yellow;
+  if (status == 'Média') return theme.colors.others.yellow
 
-  if (status == "Baixa") return theme.colors.others.green;
+  if (status == 'Baixa') return theme.colors.others.green
 
-  return "#f5f5f5";
+  return '#f5f5f5'
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
     backgroundColor: theme.colors.bg.layer,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 6,
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 4,
   },
   statusIndicatorContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 6,
     left: 8,
   },
@@ -85,12 +85,12 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.size.body.sm,
   },
   actionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionText: {
     color: theme.colors.neutral.sec,
     fontFamily: theme.fonts.family.regular,
     fontSize: theme.fonts.size.body.xs,
   },
-});
+})

@@ -1,5 +1,5 @@
-import axios from "axios";
+import axios from 'axios'
 
-const API_BASE_URL = "http://192.168.239.205:8080";
+const API_BASE_URL = 'http://164.90.131.119:8080'
 
-export const api = axios.create({ baseURL: API_BASE_URL });
+export const api = axios.create({ baseURL: API_BASE_URL })
