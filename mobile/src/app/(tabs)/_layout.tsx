@@ -21,7 +21,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: theme.colors.bg.main,
           height: 70,
-          borderColor: theme.colors.bg["layer-hover"],
+          borderTopColor: theme.colors.bg["layer-hover"],
           borderTopWidth: 2,
         },
         headerTintColor: theme.colors.neutral.sec,
@@ -52,6 +52,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
+          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Octicons name="home" size={28} color={color} />
           ),

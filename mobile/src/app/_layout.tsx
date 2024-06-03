@@ -47,6 +47,7 @@ export default function Layout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="request" options={{ headerTitle: "Solicitações" }} />
       <Stack.Screen name="profile" options={{ headerTitle: "Perfil" }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
     </Stack>
   ) : null;
 }
