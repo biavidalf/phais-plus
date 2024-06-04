@@ -31,22 +31,22 @@ export default function Layout() {
     return
   }
 
-  return fontsLoaded ? (
+  return (
     <Stack
       screenOptions={{
         headerTintColor: theme.colors.neutral.sec,
         headerRight: profile,
         headerTitleAlign: 'center',
-        headerStyle: {
-          backgroundColor: theme.colors.green.dark,
-        },
+        headerStyle: { backgroundColor: theme.colors.green.dark },
         headerTitleStyle: { fontFamily: theme.fonts.family.medium },
       }}
     >
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="request" options={{ headerTitle: 'Solicitações' }} />
-      <Stack.Screen name="profile" options={{ headerTitle: 'Perfil' }} />
-      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-up/index" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+      {/* <Stack.Screen name="request" options={{ headerTitle: 'Solicitações' }} /> */}
+      {/* <Stack.Screen name="profile" options={{ headerTitle: 'Perfil' }} /> */}
+      {/* <Stack.Screen name="(user)/home/index" options={{ headerShown: false }} /> */}
     </Stack>
-  ) : null
+  )
 }

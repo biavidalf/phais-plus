@@ -3,7 +3,7 @@ import { theme } from '@/theme'
 import { Feather } from '@expo/vector-icons'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
-export default function HomePage() {
+export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoutContainer}>

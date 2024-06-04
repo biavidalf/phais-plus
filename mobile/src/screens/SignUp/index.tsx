@@ -1,10 +1,11 @@
 import userService from '@/api/user'
 import { TextField } from '@/components/TextField'
+import Button from '@/components/global/form/Button'
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
-import { Ionicons } from '@expo/vector-icons'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AxiosError } from 'axios'
+import { Link, router } from 'expo-router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import {
@@ -13,8 +14,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
+  View
 } from 'react-native'
 import * as yup from 'yup'
 
@@ -35,11 +35,20 @@ const signUpSchema = yup.object({
     .required('Nome do estabelecimento é obrigatório')
     .min(3, 'Nome muito curto')
     .max(255, 'Nome muito longo'),
+  password: yup
+    .string()
+    .required('Senha é obrigatória')
+    .min(8, 'Senha muito curta')
+    .max(255, 'Senha muito longa'),
+  passwordConfirmation: yup
+    .string()
+    .required('Confirmação de senha é obrigatória')
+    .oneOf([yup.ref('password')], 'Senhas não conferem'),
 })
 
 type SignUpFormData = yup.InferType<typeof signUpSchema>
 
-export default function SignUpPage() {
+export default function SignUp() {
   const {
     register,
     handleSubmit,
@@ -51,7 +60,7 @@ export default function SignUpPage() {
 
   async function onSubmit(data: SignUpFormData) {
     try {
-      const { cnpj, email, username, phone } = data
+      const { cnpj, email, username, phone, password } = data
 
       const {
         data: { status },
@@ -60,7 +69,7 @@ export default function SignUpPage() {
         email,
         username,
         phone,
-        password: '12345678',
+        password,
       })
 
       if (status !== 201) {
@@ -75,6 +84,7 @@ export default function SignUpPage() {
         'Sucesso',
         'Sua solicitação foi enviada com sucesso. Aguarde o contato de um de nossos representantes.',
       )
+      router.push("/")
     } catch (error) {
       if (error instanceof AxiosError) {
         Alert.alert(
@@ -116,6 +126,7 @@ export default function SignUpPage() {
           maxLength={14}
           placeholder="Insira o CNPJ"
           onChangeText={(text) => setValue('cnpj', text)}
+          editable={!isSubmitting}
           error={errors.cnpj}
         />
 
@@ -124,6 +135,7 @@ export default function SignUpPage() {
           label="E-mail"
           placeholder="Insira o endereço de e-mail"
           onChangeText={(text) => setValue('email', text)}
+          editable={!isSubmitting}
           error={errors.email}
         />
 
@@ -133,6 +145,7 @@ export default function SignUpPage() {
           maxLength={11}
           placeholder="Insira o número de telefone"
           onChangeText={(text) => setValue('phone', text)}
+          editable={!isSubmitting}
           error={errors.phone}
         />
 
@@ -141,23 +154,40 @@ export default function SignUpPage() {
           label="Nome do Estabelecimento"
           placeholder="Insira o nome do estabelecimento"
           onChangeText={(text) => setValue('username', text)}
+          editable={!isSubmitting}
           error={errors.username}
+        />
+
+        <TextField
+          {...register('password')}
+          label="Senha"
+          secureTextEntry={true}
+          placeholder="Insira sua senha"
+          onChangeText={(text) => setValue('password', text)}
+          editable={!isSubmitting}
+          error={errors.password}
+        />
+
+        <TextField
+          {...register('passwordConfirmation')}
+          label="Confirmação de Senha"
+          secureTextEntry={true}
+          placeholder="Confirme sua senha"
+          onChangeText={(text) => setValue('passwordConfirmation', text)}
+          editable={!isSubmitting}
+          error={errors.passwordConfirmation}
         />
       </View>
 
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={handleSubmit(onSubmit)}
-        disabled={isSubmitting}
-      >
-        <Ionicons name="person-add-outline" size={20} color="#E4E4E7" />
-        <Text style={styles.buttonText}>Solicitar</Text>
-      </TouchableOpacity>
+      <Button onPress={handleSubmit(onSubmit)} isLoading={isSubmitting} />
 
-      <Text style={styles.link}>Já possui uma conta?</Text>
+      <Link href="/" style={styles.link}>
+        Já possui uma conta?
+      </Link>
     </ScrollView>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 24,
@@ -183,25 +213,6 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     marginHorizontal: 'auto',
     marginBottom: 24,
-  },
-  buttonContainer: {
-    width: '100%',
-    backgroundColor: colors.green.main,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 8,
-    maxWidth: 320,
-    marginHorizontal: 'auto',
-    marginBottom: 12,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontFamily: theme.fonts.family.medium,
-    textTransform: 'uppercase',
-    color: colors.neutral[200],
   },
   link: {
     fontSize: 14,

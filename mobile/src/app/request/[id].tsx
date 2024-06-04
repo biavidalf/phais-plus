@@ -1,28 +1,26 @@
 import {
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  StatusBar,
-  Button,
-  Alert,
-  ActivityIndicator,
-} from 'react-native'
-import DateTimePicker, {
   DateTimePickerAndroid,
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
+import {
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 
 import { theme } from '@/theme'
 
-import Select from '@/components/Select'
-import SearchInput from '@/components/SearchInput'
-import { useEffect, useState } from 'react'
-import DateField from '@/components/DateField'
-import { Ionicons } from '@expo/vector-icons'
-import { Link, useLocalSearchParams } from 'expo-router'
 import { getRequest, getRequestStatuses, updateRequest } from '@/api/request'
+import DateField from '@/components/DateField'
+import Select from '@/components/Select'
+import { Ionicons } from '@expo/vector-icons'
 import { ItemValue } from '@react-native-picker/picker/typings/Picker'
+import { Link, useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from 'react'
 
 type Request = {
   id: string
