@@ -43,10 +43,7 @@ export default function Layout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="sign-up/index" options={{ headerShown: false }} />
-      {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-      {/* <Stack.Screen name="request" options={{ headerTitle: 'Solicitações' }} /> */}
-      {/* <Stack.Screen name="profile" options={{ headerTitle: 'Perfil' }} /> */}
-      {/* <Stack.Screen name="(user)/home/index" options={{ headerShown: false }} /> */}
+      <Stack.Screen name="home/index" options={{ headerShown: false }} />
     </Stack>
   )
 }

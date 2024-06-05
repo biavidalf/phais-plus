@@ -3,19 +3,13 @@ import { TextField } from '@/components/TextField'
 import Button from '@/components/global/form/Button'
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
+import { Ionicons } from '@expo/vector-icons'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { AxiosError } from 'axios'
 import { Link, router } from 'expo-router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import {
-  Alert,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as yup from 'yup'
 
 const signUpSchema = yup.object({
@@ -84,7 +78,7 @@ export default function SignUp() {
         'Sucesso',
         'Sua solicitação foi enviada com sucesso. Aguarde o contato de um de nossos representantes.',
       )
-      router.push("/")
+      router.replace('/')
     } catch (error) {
       if (error instanceof AxiosError) {
         Alert.alert(
@@ -179,9 +173,12 @@ export default function SignUp() {
         />
       </View>
 
-      <Button onPress={handleSubmit(onSubmit)} isLoading={isSubmitting} />
+      <Button onPress={handleSubmit(onSubmit)} isLoading={isSubmitting}>
+        <Ionicons name="person-add-outline" size={20} color="#E4E4E7" />
+        <Text style={styles.buttonText}>Solicitar</Text>
+      </Button>
 
-      <Link href="/" style={styles.link}>
+      <Link replace href="/" style={styles.link}>
         Já possui uma conta?
       </Link>
     </ScrollView>
@@ -213,6 +210,12 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     marginHorizontal: 'auto',
     marginBottom: 24,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontFamily: theme.fonts.family.medium,
+    textTransform: 'uppercase',
+    color: colors.neutral[200],
   },
   link: {
     fontSize: 14,

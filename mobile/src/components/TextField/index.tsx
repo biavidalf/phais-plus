@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    height: 48,
     color: colors.neutral[200],
     fontSize: 16,
     textAlignVertical: 'top',

@@ -3,27 +3,19 @@ import { TextField } from '@/components/TextField'
 import Button from '@/components/global/form/Button'
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
+import { Ionicons } from '@expo/vector-icons'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AxiosError } from 'axios'
 import { Link, router } from 'expo-router'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import {
-  Alert,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as yup from 'yup'
 
 const loginSchema = yup.object({
   cnpj: yup.string().required('CNPJ é obrigatório').length(14, 'CNPJ inválido'),
-  password: yup
-    .string()
-    .required('Senha é obrigatória')
+  password: yup.string().required('Senha é obrigatória'),
 })
 
 type LoginFormData = yup.InferType<typeof loginSchema>
@@ -56,7 +48,7 @@ export default function Login() {
 
       await AsyncStorage.setItem('user', JSON.stringify(user))
       Alert.alert('Sucesso', 'Login realizado com sucesso! Bem-vindo(a).')
-      router.push('/')
+      router.replace('/home')
     } catch (error) {
       if (error instanceof AxiosError) {
         Alert.alert(
@@ -113,9 +105,12 @@ export default function Login() {
         />
       </View>
 
-      <Button onPress={handleSubmit(onSubmit)} isLoading={isSubmitting} />
+      <Button onPress={handleSubmit(onSubmit)} isLoading={isSubmitting}>
+        <Ionicons name="enter-outline" size={20} color="#E4E4E7" />
+        <Text style={styles.buttonText}>Acessar</Text>
+      </Button>
 
-      <Link href="/sign-up" style={styles.link}>
+      <Link replace href="/sign-up" style={styles.link}>
         Não possui uma conta?
       </Link>
     </ScrollView>
@@ -147,19 +142,6 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     marginHorizontal: 'auto',
     marginBottom: 24,
-  },
-  buttonContainer: {
-    width: '100%',
-    backgroundColor: colors.green.main,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 14,
-    borderRadius: 8,
-    maxWidth: 320,
-    marginHorizontal: 'auto',
-    marginBottom: 12,
   },
   buttonText: {
     fontSize: 18,

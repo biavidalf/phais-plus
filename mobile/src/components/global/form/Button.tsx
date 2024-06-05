@@ -1,10 +1,8 @@
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
-import { Ionicons } from '@expo/vector-icons'
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native'
@@ -21,14 +19,7 @@ export default function Button({ isLoading, ...otherProps }: ButtonProps) {
       onPress={otherProps.onPress}
       disabled={isLoading}
     >
-      {isLoading ? (
-        <ActivityIndicator color="#E4E4E7" />
-      ) : (
-        <>
-          <Ionicons name="person-add-outline" size={20} color="#E4E4E7" />
-          <Text style={styles.buttonText}>Solicitar</Text>
-        </>
-      )}
+      {isLoading ? <ActivityIndicator color="#E4E4E7" /> : otherProps.children}
     </TouchableOpacity>
   )
 }
