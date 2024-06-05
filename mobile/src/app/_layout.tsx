@@ -39,11 +39,13 @@ export default function Layout() {
         headerTitleAlign: 'center',
         headerStyle: { backgroundColor: theme.colors.green.dark },
         headerTitleStyle: { fontFamily: theme.fonts.family.medium },
+        headerBackTitleVisible: false,
       }}
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="sign-up/index" options={{ headerShown: false }} />
-      <Stack.Screen name="home/index" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="profile/index" options={{ title: 'Perfil' }} />
     </Stack>
   )
 }

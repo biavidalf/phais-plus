@@ -7,8 +7,9 @@ export interface User {
   username: string
   password: string
   phone: string
+  last_login?: string
   created_at: string
-  updated_at: string
+  updated_at?: string
 }
 
 export interface StoreUserPayload {

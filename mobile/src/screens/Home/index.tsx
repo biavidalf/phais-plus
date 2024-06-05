@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { router } from 'expo-router'
 import { useEffect, useState } from 'react'
 import {
+  ActivityIndicator,
   Alert,
   Image,
   SafeAreaView,
@@ -17,6 +18,7 @@ import {
 
 export default function Home() {
   const [user, setUser] = useState<User>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     async function getUser() {
@@ -29,9 +31,15 @@ export default function Home() {
       }
 
       setUser(() => JSON.parse(user))
+      setIsLoading(() => false)
     }
 
     getUser()
+
+    return () => {
+      setIsLoading(() => true)
+      setUser(() => undefined)
+    }
   }, [])
 
   async function logout() {
@@ -41,33 +49,36 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {user && (
-        <>
-          <TouchableOpacity style={styles.logoutContainer} onPress={logout}>
-            <Text style={{ color: '#f5f5f5' }}>Sair da conta</Text>
-            <Feather name="log-out" size={20} color="#BC5252" />
-          </TouchableOpacity>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        user && (
+          <>
+            <TouchableOpacity style={styles.logoutContainer} onPress={logout}>
+              <Text style={{ color: '#f5f5f5' }}>Sair da conta</Text>
+              <Feather name="log-out" size={20} color="#BC5252" />
+            </TouchableOpacity>
 
-          <View style={styles.contentContainer}>
-            <Image
-              source={require('../../assets/logo.png')}
-              style={styles.logo}
-              alt="Phais+ logo"
-            />
+            <View style={styles.contentContainer}>
+              <Image
+                source={require('../../assets/logo.png')}
+                style={styles.logo}
+                alt="Phais+ logo"
+              />
 
-            <Text style={styles.title}>
-              Bem-vindo,{' '}
-              <Text style={styles.titleUsername}>{user.username}</Text>!
-            </Text>
+              <Text style={styles.title}>
+                Bem-vindo,{' '}
+                <Text style={styles.titleUsername}>{user.username}</Text>!
+              </Text>
 
-            <View style={styles.cards}>
-              <Card title="Solicitações" icon="inbox" path="/requests" />
-              <Card title="Medicamentos" icon="activity" path="/meds" />
-              <Card title="Minha Conta" icon="user" path="/profile" />
-              <Card title="Sair da Conta" icon="log-out" path="/" />
+              <View style={styles.cards}>
+                <Card title="Solicitações" icon="inbox" path="/requests" />
+                <Card title="Medicamentos" icon="activity" path="/medicines" />
+                <Card title="Minha Conta" icon="user" path="/profile" />
+              </View>
             </View>
-          </View>
-        </>
+          </>
+        )
       )}
     </SafeAreaView>
   )

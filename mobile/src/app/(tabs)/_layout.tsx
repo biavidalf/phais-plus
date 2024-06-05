@@ -11,18 +11,18 @@ export default function TabLayout() {
       </Link>
     )
   }
+
   return (
     <Tabs
-      initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: theme.colors.green.main,
         tabBarInactiveTintColor: theme.colors.neutral['200'],
         tabBarShowLabel: false,
         tabBarStyle: {
+          height: 80,
           backgroundColor: theme.colors.bg.main,
-          height: 70,
-          borderTopColor: theme.colors.bg['layer-hover'],
           borderTopWidth: 2,
+          borderTopColor: theme.colors.bg['layer-hover'],
         },
         headerTintColor: theme.colors.neutral.sec,
         headerTitleAlign: 'center',
@@ -35,7 +35,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home/index"
         options={{
           title: 'Home',
           headerShown: false,
@@ -46,9 +46,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="meds"
+        name="medicines/index"
         options={{
-          title: 'Medication',
+          title: 'Medicamentos',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="stethoscope"
@@ -60,7 +60,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="requests"
+        name="requests/index"
         options={{
           title: 'Solicitações',
           tabBarIcon: ({ color }) => (
