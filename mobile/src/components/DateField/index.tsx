@@ -1,44 +1,32 @@
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
-import { Feather } from '@expo/vector-icons'
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-} from 'react-native'
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker'
+import { StyleSheet, Text, View } from 'react-native'
 
 type DateFieldProps = {
   date: Date
   label?: string
-  showDatePicker?: () => void
-  style?: StyleProp<TextStyle>
+  onChange: (_: DateTimePickerEvent, selectedDate?: Date) => void
 }
 
 export default function DateField({
   date,
   label,
-  showDatePicker,
-  style,
+  onChange,
+  ...otherProps
 }: DateFieldProps) {
   return (
-    <Pressable onPress={showDatePicker} style={[styles.container, style]}>
+    <View>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.input}>
-        <Text style={{ color: theme.colors.neutral.sec }}>
-          {date.toLocaleDateString()}
-        </Text>
-        <View style={styles.calendarIcon}>
-          <Feather
-            name="calendar"
-            size={24}
-            color={theme.colors.neutral['400']}
-          />
-        </View>
-      </View>
-    </Pressable>
+      <RNDateTimePicker
+        mode="date"
+        value={date}
+        onChange={onChange}
+        {...otherProps}
+      />
+    </View>
   )
 }
 

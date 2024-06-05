@@ -1,51 +1,43 @@
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
-import { Picker, PickerProps } from '@react-native-picker/picker'
+import { forwardRef } from 'react'
 import { FieldError } from 'react-hook-form'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
+import RNPickerSelect, { PickerSelectProps } from 'react-native-picker-select'
 
-type SelectOption = { label: string; value: string }
 type SelectProps = {
   label?: string
   error?: FieldError
-  options: SelectOption[]
-  selectedValue: any
-} & PickerProps
+  style?: StyleProp<ViewStyle>
+} & PickerSelectProps
 
-export default function Select({
-  label,
-  style,
-  error,
-  options,
-  selectedValue,
-  ...otherProps
-}: SelectProps) {
-  console.log(options)
+const Select = forwardRef<RNPickerSelect, SelectProps>(function Select(
+  { label, error, style, ...otherProps },
+  ref,
+) {
   return (
     <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <Picker
-        dropdownIconColor={theme.colors.neutral.sec}
-        mode="dropdown"
-        style={styles.input}
-        selectedValue={selectedValue}
+      <RNPickerSelect
         {...otherProps}
-      >
-        {options.map(({ label, value }, index) => {
-          return (
-            <Picker.Item
-              key={index}
-              label={label}
-              value={value}
-              style={styles.pickerItem}
-            />
-          )
-        })}
-      </Picker>
+        ref={ref}
+        style={{
+          inputIOS: [
+            styles.input,
+            error ? styles.invalidInput : styles.validInput,
+          ],
+          inputAndroid: [
+            styles.input,
+            error ? styles.invalidInput : styles.validInput,
+          ],
+        }}
+        items={otherProps.items}
+      />
+
       {error && <Text style={styles.errorMessage}>{error.message}</Text>}
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -55,10 +47,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    backgroundColor: theme.colors.bg.layer,
-    paddingHorizontal: 18,
+    width: '100%',
+    height: 48,
+    color: colors.neutral[200],
+    fontSize: 16,
+    textAlignVertical: 'top',
     fontFamily: theme.fonts.family.regular,
-    fontSize: theme.fonts.size.body.md,
+    backgroundColor: colors.bg.layer,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  validInput: {
+    borderColor: colors.bg.layer,
+  },
+  invalidInput: {
+    borderColor: colors.others.red,
   },
   pickerItem: {
     backgroundColor: theme.colors.bg.layer,
@@ -76,3 +81,5 @@ const styles = StyleSheet.create({
     fontFamily: 'SourceSansPro_400Regular',
   },
 })
+
+export default Select
