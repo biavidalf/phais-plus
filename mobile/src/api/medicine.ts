@@ -1,5 +1,9 @@
-import { api } from '.'
+import { api } from '@/api'
 
-export const getMedicines = async () => {
-  return await api.get('/medicine')
+const medicineService = {
+  async index() {
+    return await api.get('/medicine')
+  },
 }
+
+export default medicineService

@@ -1,42 +1,19 @@
-import { api } from '.'
+import { api } from '@/api'
+import { StoreRequestPayload, UpdateRequestPayload } from '@/types/api/request'
 
-type CreateRequestData = {
-  requester_hospital_id: string
-  medicine_id: string
-  priority_id: string
-  status_id: string
-  quantity: number
-  description: string
-  due_date: string
-  return_date: string
+const requestService = {
+  async index() {
+    return await api.get('/request')
+  },
+  async show(id: string) {
+    return await api.get(`/request/${id}`)
+  },
+  async store(data: StoreRequestPayload) {
+    return await api.post('/request', data)
+  },
+  async update(id: string, data: UpdateRequestPayload) {
+    return await api.patch(`/request/${id}`, data)
+  },
 }
 
-type UpdateRequestData = {
-  status_id?: string
-  due_date?: string
-  return_date?: string
-}
-
-export const getRequests = async () => {
-  return await api.get('/request')
-}
-
-export const getRequest = async (id: string) => {
-  return await api.get(`/request/${id}`)
-}
-
-export const createRequest = async (data: CreateRequestData) => {
-  return await api.post('/request', data)
-}
-
-export const updateRequest = async (id: string, data: UpdateRequestData) => {
-  return await api.patch(`/request/${id}`, data)
-}
-
-export const getRequestStatuses = async () => {
-  return await api.get('/request/status')
-}
-
-export const getRequestPriorities = async () => {
-  return await api.get('/request/priority')
-}
+export default requestService
