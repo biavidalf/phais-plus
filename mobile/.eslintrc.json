@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "@rocketseat/eslint-config/react",
-    "simple-import-sort"
-  ],
+  "extends": "@rocketseat/eslint-config/react",
   "rules": {
     "camelcase": "off"
   }
