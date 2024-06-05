@@ -1,6 +1,6 @@
 import { BaseResponse } from '..'
 
-interface User {
+export interface User {
   id: string
   cnpj: string
   email: string

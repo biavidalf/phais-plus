@@ -1,32 +1,74 @@
 import Card from '@/components/home/Card'
 import { theme } from '@/theme'
+import { User } from '@/types/api/user'
 import { Feather } from '@expo/vector-icons'
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { router } from 'expo-router'
+import { useEffect, useState } from 'react'
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 export default function Home() {
+  const [user, setUser] = useState<User>()
+
+  useEffect(() => {
+    async function getUser() {
+      const user = await AsyncStorage.getItem('user')
+
+      if (!user) {
+        router.replace('/')
+        Alert.alert('Erro', 'Usuário não encontrado')
+        return
+      }
+
+      setUser(() => JSON.parse(user))
+    }
+
+    getUser()
+  }, [])
+
+  async function logout() {
+    await AsyncStorage.removeItem('user')
+    router.replace('/')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.logoutContainer}>
-        <Text style={{ color: '#f5f5f5' }}>Sair da conta</Text>
-        <Feather name="log-out" size={20} color="#BC5252" />
-      </View>
+      {user && (
+        <>
+          <TouchableOpacity style={styles.logoutContainer} onPress={logout}>
+            <Text style={{ color: '#f5f5f5' }}>Sair da conta</Text>
+            <Feather name="log-out" size={20} color="#BC5252" />
+          </TouchableOpacity>
 
-      <Image
-        source={require('../../assets/logo.png')}
-        style={styles.logo}
-        alt="Phais+ logo"
-      />
+          <View style={styles.contentContainer}>
+            <Image
+              source={require('../../assets/logo.png')}
+              style={styles.logo}
+              alt="Phais+ logo"
+            />
 
-      <Text style={styles.title}>
-        Bem-vindo, <Text style={styles.titleUsername}>Username!</Text>
-      </Text>
+            <Text style={styles.title}>
+              Bem-vindo,{' '}
+              <Text style={styles.titleUsername}>{user.username}</Text>!
+            </Text>
 
-      <View style={styles.cards}>
-        <Card title="Solicitações" icon="inbox" path="/requests" />
-        <Card title="Medicamentos" icon="activity" path="/meds" />
-        <Card title="Minha Conta" icon="user" path="/profile" />
-        <Card title="Sair da Conta" icon="log-out" path="/" />
-      </View>
+            <View style={styles.cards}>
+              <Card title="Solicitações" icon="inbox" path="/requests" />
+              <Card title="Medicamentos" icon="activity" path="/meds" />
+              <Card title="Minha Conta" icon="user" path="/profile" />
+              <Card title="Sair da Conta" icon="log-out" path="/" />
+            </View>
+          </View>
+        </>
+      )}
     </SafeAreaView>
   )
 }
@@ -34,20 +76,21 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#2C3A3B',
-    paddingHorizontal: 24,
   },
   logoutContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: 8,
-    position: 'absolute',
-    top: 64,
-    right: 24,
+    paddingTop: 16,
+    paddingHorizontal: 24,
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
   },
   logo: {
     marginBottom: 36,

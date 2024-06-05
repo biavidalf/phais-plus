@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 interface CardProps {
   title: string
-  icon: any
+  icon: string
   path: string
 }
 
@@ -13,6 +13,7 @@ export default function Card({ title, icon, path }: CardProps) {
   return (
     <Link href={path}>
       <View style={[styles.card, styles.shadowProp]}>
+        {/* @ts-expect-error: Card icon property is a Feather icon name */}
         <Feather name={icon} size={56} color={theme.colors.neutral.sec} />
         <Text style={styles.cardTitle}>{title}</Text>
       </View>
@@ -22,8 +23,8 @@ export default function Card({ title, icon, path }: CardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    width: 164,
-    height: 164,
+    width: 160,
+    height: 160,
     aspectRatio: 1,
     backgroundColor: theme.colors.bg.layer,
     borderRadius: 16,

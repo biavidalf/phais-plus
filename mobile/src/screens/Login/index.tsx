@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AxiosError } from 'axios'
 import { Link, router } from 'expo-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import * as yup from 'yup'
@@ -29,6 +29,18 @@ export default function Login() {
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
   })
+
+  useEffect(() => {
+    async function checkUser() {
+      const user = await AsyncStorage.getItem('user')
+
+      if (user) {
+        router.replace('/home')
+      }
+    }
+
+    checkUser()
+  }, [])
 
   async function onSubmit(data: LoginFormData) {
     try {

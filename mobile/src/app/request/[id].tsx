@@ -9,7 +9,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native'
 
 import { theme } from '@/theme'
