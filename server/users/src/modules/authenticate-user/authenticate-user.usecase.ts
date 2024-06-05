@@ -10,7 +10,7 @@ type AuthenticateUserRequestBody = {
 };
 
 export class AuthenticateUserUseCase {
-  constructor() {}
+  constructor() { }
 
   async execute(params: ParamsDictionary, body: AuthenticateUserRequestBody) {
     const { cnpj, password } = body;
@@ -36,12 +36,18 @@ export class AuthenticateUserUseCase {
       return formatResponse(401, "Invalid password.");
     }
 
+    await prismaClient.user.update({
+      where: { id: foundUser.id },
+      data: { last_login: new Date() },
+    });
+
     return formatResponse(200, "User authenticated successfully.", {
       id: foundUser.id,
       cnpj: foundUser.cnpj,
       email: foundUser.email,
       username: foundUser.username,
       phone: foundUser.phone,
+      last_login: foundUser.last_login, 
       created_at: foundUser.created_at,
       updated_at: foundUser.updated_at,
     });
