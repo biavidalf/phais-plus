@@ -1,12 +1,8 @@
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker'
+import { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import {
   ActivityIndicator,
   Alert,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -14,7 +10,8 @@ import {
 
 import { theme } from '@/theme'
 
-import { getRequest, getRequestStatuses, updateRequest } from '@/api/request'
+import requestService from '@/api/request'
+import requestStatusService from '@/api/requestStatus'
 import DateField from '@/components/DateField'
 import Select from '@/components/Select'
 import { Ionicons } from '@expo/vector-icons'
@@ -40,43 +37,47 @@ export default function Request() {
   const { id } = useLocalSearchParams()
 
   const [loading, setLoading] = useState<boolean>(true)
-  const [returnDate, setReturnDate] = useState<Date>(new Date())
   const [request, setRequest] = useState<Request | null>(null)
   const [statuses, setStatuses] = useState<Status[]>([])
 
+  const [returnDate, setReturnDate] = useState<Date>(new Date())
   const [selectedStatus, setSelectedStatus] = useState<string>()
 
-  const loadRequest = async () => {
-    const {
-      status,
-      data: { data: request },
-    } = await getRequest(id.toString())
-
-    if (status !== 200) {
-      throw new Error('Erro ao carregar a solicitação.')
-    }
-
-    setRequest(request)
-    setSelectedStatus(request.status.id)
-  }
-
-  const loadStatuses = async () => {
-    const {
-      status,
-      data: { data: statuses },
-    } = await getRequestStatuses()
-
-    if (status !== 200) {
-      throw new Error('Erro ao carregar os status.')
-    }
-
-    setStatuses(statuses)
-  }
-
   useEffect(() => {
+    const getRequest = async () => {
+      if (!id) {
+        throw new Error('Erro ao carregar a solicitação.')
+      }
+
+      const {
+        status,
+        data: { data: request },
+      } = await requestService.show(id.toString())
+
+      if (status !== 200) {
+        throw new Error('Erro ao carregar a solicitação.')
+      }
+
+      setRequest(request)
+      setSelectedStatus(request.status.id)
+    }
+
+    const getStatuses = async () => {
+      const {
+        status,
+        data: { data: statuses },
+      } = await requestStatusService.index()
+
+      if (status !== 200) {
+        throw new Error('Erro ao carregar os status.')
+      }
+
+      setStatuses(statuses)
+    }
+
     ;(async () => {
       try {
-        Promise.all([loadRequest(), loadStatuses()])
+        Promise.all([getRequest(), getStatuses()])
       } catch (error) {
         Alert.alert(
           'Erro',
@@ -88,7 +89,7 @@ export default function Request() {
         setLoading(false)
       }
     })()
-  }, [])
+  }, [id])
 
   const formatDate = (date: Date) => {
     const month = String(date.getMonth() + 1)
@@ -107,7 +108,7 @@ export default function Request() {
       return
     }
 
-    await updateRequest(request.id, {
+    await requestService.update(request.id, {
       return_date: formatDate(selectedDate),
     })
     setReturnDate(selectedDate)
@@ -120,7 +121,7 @@ export default function Request() {
       return
     }
 
-    await updateRequest(request.id, {
+    await requestService.update(request.id, {
       status_id: value.toString(),
     })
 
@@ -128,120 +129,107 @@ export default function Request() {
     Alert.alert('Situação atualizada com sucesso!')
   }
 
-  const showDatePicker = () => {
-    DateTimePickerAndroid.open({
-      mode: 'date',
-      value: returnDate,
-      onChange: onChangeReturnDate,
-    })
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.sectionTitleContainer}>
+      <View style={styles.contentContainer}>
         <Text style={styles.sectionTitleText}>Ver Solicitação</Text>
-      </View>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#F4F4F5" />
-      ) : (
-        request && (
-          <>
-            <View style={styles.dataContainer}>
-              <Text style={styles.titleText}>
-                #{request.id.substring(0, 4)} -{' '}
-                {request.requester_hospital.name}
-              </Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#F4F4F5" />
+        ) : (
+          request && (
+            <>
+              <View style={styles.dataContainer}>
+                <Text style={styles.titleText}>
+                  #{request.id.substring(0, 4)} -{' '}
+                  {request.requester_hospital.name}
+                </Text>
 
-              <View style={styles.doubleColumnContainer}>
-                <View style={styles.groupContainer}>
-                  <Text style={styles.groupLabelText}>Qtd</Text>
-                  <Text style={styles.groupTitleText}>{request.quantity}</Text>
+                <View style={styles.doubleColumnContainer}>
+                  <View style={styles.groupContainer}>
+                    <Text style={styles.groupLabelText}>Qtd</Text>
+                    <Text style={styles.groupTitleText}>
+                      {request.quantity}
+                    </Text>
+                  </View>
+
+                  <View style={[styles.groupContainer, { flex: 1 }]}>
+                    <Text style={styles.groupLabelText}>Medicamento</Text>
+                    <Text style={styles.groupTitleText}>
+                      {request.medicine.name}
+                    </Text>
+                  </View>
                 </View>
 
-                <View style={[styles.groupContainer, { flex: 1 }]}>
-                  <Text style={styles.groupLabelText}>Medicamento</Text>
+                <View style={styles.groupContainer}>
+                  <Text style={styles.groupLabelText}>Solicitante</Text>
                   <Text style={styles.groupTitleText}>
-                    {request.medicine.name}
+                    {request.requester_hospital.name}
+                  </Text>
+                </View>
+
+                <View style={styles.groupContainer}>
+                  <Text style={styles.groupLabelText}>Status</Text>
+                  <View>
+                    <Select
+                      items={statuses.map(({ id, name }) => ({
+                        label: name,
+                        value: id,
+                      }))}
+                      onValueChange={onChangeStatus}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.doubleColumnContainer}>
+                  <View style={[styles.groupContainer, { flex: 1 }]}>
+                    <Text style={styles.groupLabelText}>Data Limite</Text>
+                    <DateField
+                      date={new Date(request.due_date)}
+                      onChange={onChangeReturnDate}
+                    />
+                  </View>
+
+                  <View style={[styles.groupContainer, { flex: 1 }]}>
+                    <Text style={styles.groupLabelText}>Data Devolução</Text>
+
+                    <DateField
+                      onChange={onChangeReturnDate}
+                      date={returnDate}
+                    ></DateField>
+                  </View>
+                </View>
+
+                <View style={styles.groupContainer}>
+                  <Text style={styles.groupLabelText}>Descrição</Text>
+                  <Text style={styles.groupTitleText}>
+                    {request.description}
                   </Text>
                 </View>
               </View>
 
-              <View style={styles.groupContainer}>
-                <Text style={styles.groupLabelText}>Solicitante</Text>
-                <Text style={styles.groupTitleText}>
-                  {request.requester_hospital.name}
+              <View style={styles.creationInfoContainer}>
+                <Text style={styles.creationInfoText}>
+                  Criado por {request.requester_hospital.name} às{' '}
+                  {new Date(request.created_at).toLocaleDateString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })}
                 </Text>
               </View>
+            </>
+          )
+        )}
 
-              <View style={styles.groupContainer}>
-                <Text style={styles.groupLabelText}>Status</Text>
-                <View>
-                  <Select
-                    options={(() =>
-                      statuses.map(({ id, name }) => {
-                        return { label: name, value: id }
-                      }))()}
-                    selectedValue={selectedStatus}
-                    onValueChange={onChangeStatus}
-                    style={{ flex: 0 }}
-                  />
-                </View>
-              </View>
-
-              {/* <View style={styles.groupContainer}>
-                <Text style={styles.groupLabelText}>Atendente</Text>
-                <SearchInput placeholder="Procurar" isDisabled />
-              </View> */}
-
-              <View style={styles.doubleColumnContainer}>
-                <View style={[styles.groupContainer, { flex: 1 }]}>
-                  <Text style={styles.groupLabelText}>Data Limite</Text>
-                  <DateField
-                    date={new Date(request.due_date)}
-                    style={{ flex: 0 }}
-                  ></DateField>
-                </View>
-
-                <View style={[styles.groupContainer, { flex: 1 }]}>
-                  <Text style={styles.groupLabelText}>Data Devolução</Text>
-
-                  <DateField
-                    showDatePicker={showDatePicker}
-                    date={returnDate}
-                    style={{ flex: 0 }}
-                  ></DateField>
-                </View>
-              </View>
-
-              <View style={styles.groupContainer}>
-                <Text style={styles.groupLabelText}>Descrição</Text>
-                <Text style={styles.groupTitleText}>{request.description}</Text>
-              </View>
-            </View>
-
-            <View style={styles.creationInfoContainer}>
-              <Text style={styles.creationInfoText}>
-                Criado por {request.requester_hospital.name} às{' '}
-                {new Date(request.created_at).toLocaleDateString('pt-BR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })}
-              </Text>
-            </View>
-          </>
-        )
-      )}
-
-      <Link href="/chat" style={styles.chatIcon}>
-        <Ionicons
-          name="chatbubble-outline"
-          size={28}
-          color={theme.colors.neutral.sec}
-        />
-      </Link>
-      <StatusBar backgroundColor={theme.colors.green.dark} />
+        <Link href="/chat" style={styles.chatIcon}>
+          <Ionicons
+            name="chatbubble-outline"
+            size={28}
+            color={theme.colors.neutral.sec}
+          />
+        </Link>
+      </View>
     </SafeAreaView>
   )
 }
@@ -250,16 +238,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.bg.main,
-    paddingHorizontal: 16,
   },
-  sectionTitleContainer: {
-    marginTop: 28,
-    marginBottom: 20,
+  contentContainer: {
+    flex: 1,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
   },
   sectionTitleText: {
     color: theme.colors.neutral.sec,
     fontFamily: theme.fonts.family.medium,
     fontSize: theme.fonts.size.heading.sm,
+    marginBottom: 20,
   },
   titleText: {
     color: theme.colors.neutral.sec,

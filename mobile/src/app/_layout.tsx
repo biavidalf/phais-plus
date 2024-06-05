@@ -46,6 +46,10 @@ export default function Layout() {
       <Stack.Screen name="sign-up/index" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="profile/index" options={{ title: 'Perfil' }} />
+      <Stack.Screen
+        name="request/[id]"
+        options={{ title: 'Detalhes da solicitação' }}
+      />
     </Stack>
   )
 }
