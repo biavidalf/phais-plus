@@ -1,191 +1,187 @@
-// import { theme } from '@/theme'
-// import { colors } from '@/theme/colors'
-// import { Ionicons } from '@expo/vector-icons'
-// import React from 'react'
-// import {
-//   Image,
-//   ScrollView,
-//   StyleSheet,
-//   Text,
-//   TouchableOpacity,
-//   View,
-// } from 'react-native'
+import { theme } from '@/theme'
+import { colors } from '@/theme/colors'
+import { User } from '@/types/api/user'
+import { Ionicons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { router } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
-// function Profile() {
-//   return (
-//     <ScrollView style={styles.container}>
-//       <View style={styles.profileContainer}>
-//         <Image
-//           source={require('../../../assets/smileman.png')}
-//           style={styles.profileImage}
-//         />
-//         <Text style={styles.profileName}>Francisco Almeira Filho</Text>
-//         <Text style={styles.profileRole}>Farmacêutico</Text>
-//       </View>
+export default function Profile() {
+  const [user, setUser] = useState<User>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
-//       <View style={styles.section}>
-//         <Text style={styles.sectionTitle}>Informações Gerais</Text>
-//         <TouchableOpacity style={styles.editButton}>
-//           <Ionicons
-//             name="pencil-outline"
-//             size={16}
-//             color={colors.neutral[400]}
-//           />
-//         </TouchableOpacity>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Matrícula:</Text>
-//           <Text style={styles.infoText}>01575</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Nome Completo:</Text>
-//           <Text style={styles.infoText}>Francisco Almeira Filho</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>CPF:</Text>
-//           <Text style={styles.infoText}>068.151.457-97</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Data de Nascimento:</Text>
-//           <Text style={styles.infoText}>05/11/1990</Text>
-//         </View>
-//       </View>
+  useEffect(() => {
+    async function getUser() {
+      const user = await AsyncStorage.getItem('user')
 
-//       <View style={styles.section}>
-//         <Text style={styles.sectionTitle}>Informações de Contato</Text>
-//         <TouchableOpacity style={styles.editButton}>
-//           <Ionicons
-//             name="pencil-outline"
-//             size={16}
-//             color={colors.neutral[400]}
-//           />
-//         </TouchableOpacity>
-//         <View style={styles.infoRow}>
-//           <Ionicons name="call-outline" size={20} color={colors.neutral[400]} />
-//           <Text style={styles.infoText}>(085) 99999-9999</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Ionicons name="mail-outline" size={20} color={colors.neutral[400]} />
-//           <Text style={styles.infoText}>francisco@gmail.com</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Ionicons
-//             name="location-outline"
-//             size={20}
-//             color={colors.neutral[400]}
-//           />
-//           <Text style={styles.infoText}>Rua nº 70 Cidade Estado</Text>
-//         </View>
-//       </View>
+      if (!user) {
+        router.replace('/')
+        Alert.alert('Erro', 'Usuário não encontrado')
+        return
+      }
 
-//       <View style={styles.section}>
-//         <Text style={styles.sectionTitle}>Empresa / Hospital</Text>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Unimed Fortaleza - Sul</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Cargo/Função:</Text>
-//           <Text style={styles.infoText}>Farmacêutico</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Data de Admissão:</Text>
-//           <Text style={styles.infoText}>05/11/2022</Text>
-//         </View>
-//       </View>
+      setUser(() => JSON.parse(user))
+      setIsLoading(() => false)
 
-//       <View style={styles.section}>
-//         <Text style={styles.sectionTitle}>Informações de Sistema</Text>
-//         <TouchableOpacity style={styles.editButton}>
-//           <Ionicons
-//             name="pencil-outline"
-//             size={16}
-//             color={colors.neutral[400]}
-//           />
-//         </TouchableOpacity>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Cadastrado em:</Text>
-//           <Text style={styles.infoText}>20/01/2023 14:45</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Último Login em:</Text>
-//           <Text style={styles.infoText}>25/01/2023 10:30</Text>
-//         </View>
-//         <View style={styles.infoRow}>
-//           <Text style={styles.infoLabel}>Observações:</Text>
-//           <Text style={styles.infoText}>
-//             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//           </Text>
-//         </View>
-//       </View>
-//     </ScrollView>
-//   )
-// }
+      return () => {
+        setIsLoading(() => true)
+        setUser(() => undefined)
+      }
+    }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: theme.colors.bg.main,
-//     padding: 50,
-//   },
-//   profileContainer: {
-//     alignItems: 'center',
-//     marginBottom: 24,
-//   },
-//   profileImage: {
-//     width: 200,
-//     height: 200,
-//     borderRadius: 150,
-//     marginBottom: 12,
-//   },
-//   profileName: {
-//     fontSize: 20,
-//     color: colors.neutral[200],
-//     fontFamily: theme.fonts.family.medium,
-//   },
-//   profileRole: {
-//     fontSize: 16,
-//     color: colors.neutral[400],
-//     fontFamily: theme.fonts.family.regular,
-//   },
-//   section: {
-//     marginBottom: 24,
-//     paddingHorizontal: 16,
-//     paddingVertical: 16,
-//     borderWidth: 1,
-//     borderColor: colors.neutral[400],
-//     borderRadius: 8,
-//     backgroundColor: theme.colors.bg.main,
-//     width: '90%',
-//     alignSelf: 'center',
-//   },
-//   sectionTitle: {
-//     fontSize: 18,
-//     color: colors.neutral[200],
-//     fontFamily: theme.fonts.family.medium,
-//     marginBottom: 12,
-//   },
-//   infoRow: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginBottom: 8,
-//   },
-//   infoLabel: {
-//     fontSize: 16,
-//     color: colors.neutral[400],
-//     fontFamily: theme.fonts.family.regular,
-//   },
-//   infoText: {
-//     fontSize: 16,
-//     color: colors.neutral[200],
-//     fontFamily: theme.fonts.family.regular,
-//     marginLeft: 8,
-//   },
-//   editButton: {
-//     marginTop: 15,
-//     position: 'absolute',
-//     top: 0,
-//     right: 16,
-//     zIndex: 1,
-//   },
-// })
+    getUser()
 
-// export default Profile
+    return () => {
+      setIsLoading(() => true)
+      setUser(() => undefined)
+    }
+  }, [])
+
+  function formatPhone(phone: string) {
+    if (!/^\d+$/.test(phone)) {
+      return phone
+    }
+
+    switch (phone.length) {
+      case 10:
+        return `(${phone.substring(0, 2)}) ${phone.substring(2, 6)}-${phone.substring(6)}`
+      case 11:
+        return `(${phone.substring(0, 2)}) ${phone.substring(2, 7)}-${phone.substring(7)}`
+      default:
+        return phone
+    }
+  }
+
+  function formatDate(date: string) {
+    return new Date(date).toLocaleString('pt-BR', { hour12: false })
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        user && (
+          <>
+            <View style={styles.profileContainer}>
+              <Text style={styles.profileName}>{user.username}</Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Informações de Contato</Text>
+              <TouchableOpacity style={styles.editButton}>
+                <Ionicons
+                  name="pencil-outline"
+                  size={16}
+                  color={colors.neutral[400]}
+                />
+              </TouchableOpacity>
+              <View style={styles.infoRow}>
+                <Ionicons
+                  name="call-outline"
+                  size={20}
+                  color={colors.neutral[400]}
+                />
+                <Text style={styles.infoText}>{formatPhone(user.phone)}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Ionicons
+                  name="mail-outline"
+                  size={20}
+                  color={colors.neutral[400]}
+                />
+                <Text style={styles.infoText}>{user.email}</Text>
+              </View>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Informações de Sistema</Text>
+              <TouchableOpacity style={styles.editButton}>
+                <Ionicons
+                  name="pencil-outline"
+                  size={16}
+                  color={colors.neutral[400]}
+                />
+              </TouchableOpacity>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Cadastrado em:</Text>
+                <Text style={styles.infoText}>
+                  {formatDate(user.created_at)}
+                </Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Último Login em:</Text>
+                <Text style={styles.infoText}>
+                  {user.last_login ? formatDate(user.last_login) : '-'}
+                </Text>
+              </View>
+            </View>
+          </>
+        )
+      )}
+    </ScrollView>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.bg.main,
+    padding: 24,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  profileName: {
+    fontSize: 20,
+    color: colors.neutral[200],
+    fontFamily: theme.fonts.family.medium,
+  },
+  section: {
+    width: '100%',
+    marginBottom: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: colors.neutral[400],
+    borderRadius: 8,
+    backgroundColor: theme.colors.bg.main,
+    alignSelf: 'center',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: colors.neutral[200],
+    fontFamily: theme.fonts.family.medium,
+    marginBottom: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  infoLabel: {
+    fontSize: 16,
+    color: colors.neutral[400],
+    fontFamily: theme.fonts.family.regular,
+  },
+  infoText: {
+    fontSize: 16,
+    color: colors.neutral[200],
+    fontFamily: theme.fonts.family.regular,
+    marginLeft: 8,
+  },
+  editButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+  },
+})
