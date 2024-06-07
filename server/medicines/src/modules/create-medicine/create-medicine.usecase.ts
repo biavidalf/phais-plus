@@ -9,9 +9,9 @@ type CreateMedicineRequestBody = {
   therapeutic_class?: string
   regulatory_category?: string
   process_number: string
-  process_end_date?: Date
+  process_end_date?: string
   registration_number: string
-  registration_expiration_date?: Date
+  registration_expiration_date?: string
   registration_holder_company: string
   registration_status: string
 };
@@ -78,9 +78,9 @@ export class CreateMedicineUseCase {
         therapeutic_class,
         regulatory_category,
         process_number,
-        process_end_date,
+        process_end_date: process_end_date ? new Date(process_end_date) : null,
         registration_number,
-        registration_expiration_date,
+        registration_expiration_date: registration_expiration_date ? new Date(registration_expiration_date) : null,
         registration_holder_company,
         registration_status,
       },
