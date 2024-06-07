@@ -1,3 +1,4 @@
+import userService from '@/api/user'
 import { theme } from '@/theme'
 import { colors } from '@/theme/colors'
 import { User } from '@/types/api/user'
@@ -11,6 +12,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -18,6 +20,11 @@ import {
 export default function Profile() {
   const [user, setUser] = useState<User>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  const [email, setEmail] = useState<string>()
+  const [phone, setPhone] = useState<string>()
+  const [isEditContactInfoActive, setIsEditContactInfoActive] =
+    useState<boolean>(false)
 
   useEffect(() => {
     async function getUser() {
@@ -29,13 +36,12 @@ export default function Profile() {
         return
       }
 
-      setUser(() => JSON.parse(user))
-      setIsLoading(() => false)
+      const parsedUser = JSON.parse(user)
 
-      return () => {
-        setIsLoading(() => true)
-        setUser(() => undefined)
-      }
+      setUser(() => parsedUser)
+      setIsLoading(() => false)
+      setEmail(parsedUser.email)
+      setPhone(parsedUser.phone)
     }
 
     getUser()
@@ -65,6 +71,32 @@ export default function Profile() {
     return new Date(date).toLocaleString('pt-BR', { hour12: false })
   }
 
+  async function saveData() {
+    if (!user || !email || !phone) {
+      Alert.alert('Erro', 'Preencha todos os campos')
+      return
+    }
+
+    const {
+      data: { status },
+    } = await userService.update(user.id, {
+      email,
+      phone,
+    })
+
+    if (status !== 200) {
+      Alert.alert('Erro', 'Erro ao atualizar dados.')
+      return
+    }
+
+    const updatedUser = { ...user, email, phone }
+    setUser(updatedUser)
+    setIsEditContactInfoActive(false)
+    await AsyncStorage.setItem('user', JSON.stringify(updatedUser))
+
+    Alert.alert('Sucesso', 'Dados atualizados com sucesso.')
+  }
+
   return (
     <ScrollView style={styles.container}>
       {isLoading ? (
@@ -78,20 +110,64 @@ export default function Profile() {
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Informações de Contato</Text>
-              <TouchableOpacity style={styles.editButton}>
-                <Ionicons
-                  name="pencil-outline"
-                  size={16}
-                  color={colors.neutral[400]}
-                />
-              </TouchableOpacity>
+              {isEditContactInfoActive ? (
+                <View style={[styles.editButton, styles.editContainer]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      saveData()
+                    }}
+                  >
+                    <Ionicons
+                      name="checkmark"
+                      size={20}
+                      color={colors.neutral[400]}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setEmail(user.email)
+                      setPhone(user.phone)
+                      setIsEditContactInfoActive(false)
+                    }}
+                  >
+                    <Ionicons
+                      name="close-outline"
+                      size={20}
+                      color={colors.neutral[400]}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsEditContactInfoActive(true)
+                  }}
+                  style={styles.editButton}
+                >
+                  <Ionicons
+                    name="pencil-outline"
+                    size={20}
+                    color={colors.neutral[400]}
+                  />
+                </TouchableOpacity>
+              )}
               <View style={styles.infoRow}>
                 <Ionicons
                   name="call-outline"
                   size={20}
                   color={colors.neutral[400]}
                 />
-                <Text style={styles.infoText}>{formatPhone(user.phone)}</Text>
+                <TextInput
+                  style={[
+                    styles.infoText,
+                    isEditContactInfoActive && styles.infoInput,
+                  ]}
+                  onChangeText={(text) => setPhone(text)}
+                  value={phone}
+                  autoFocus={isEditContactInfoActive}
+                  readOnly={!isEditContactInfoActive}
+                />
               </View>
               <View style={styles.infoRow}>
                 <Ionicons
@@ -99,19 +175,20 @@ export default function Profile() {
                   size={20}
                   color={colors.neutral[400]}
                 />
-                <Text style={styles.infoText}>{user.email}</Text>
+                <TextInput
+                  style={[
+                    styles.infoText,
+                    isEditContactInfoActive && styles.infoInput,
+                  ]}
+                  onChangeText={(text) => setEmail(text)}
+                  value={email}
+                  readOnly={!isEditContactInfoActive}
+                />
               </View>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Informações de Sistema</Text>
-              <TouchableOpacity style={styles.editButton}>
-                <Ionicons
-                  name="pencil-outline"
-                  size={16}
-                  color={colors.neutral[400]}
-                />
-              </TouchableOpacity>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Cadastrado em:</Text>
                 <Text style={styles.infoText}>
@@ -151,10 +228,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingVertical: 16,
     paddingHorizontal: 24,
-    borderWidth: 1,
-    borderColor: colors.neutral[400],
     borderRadius: 8,
-    backgroundColor: theme.colors.bg.main,
+    backgroundColor: theme.colors.bg.layer,
     alignSelf: 'center',
   },
   sectionTitle: {
@@ -172,16 +247,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.neutral[400],
     fontFamily: theme.fonts.family.regular,
+    borderBottomWidth: 1,
+    borderColor: 'transparent',
+    height: 40,
   },
   infoText: {
     fontSize: 16,
     color: colors.neutral[200],
     fontFamily: theme.fonts.family.regular,
     marginLeft: 8,
+    paddingEnd: 16,
+    height: 40,
+    borderBottomWidth: 1,
+    borderColor: 'transparent',
+  },
+  infoInput: {
+    borderBottomWidth: 1,
+    borderColor: colors.neutral[200],
   },
   editButton: {
     position: 'absolute',
     top: 16,
     right: 16,
+  },
+  editContainer: {
+    gap: 6,
   },
 })
