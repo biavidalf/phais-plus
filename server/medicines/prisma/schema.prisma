@@ -10,13 +10,13 @@ datasource db {
 model Medicine {
   id                           String    @id @default(cuid())
   name                         String
-  active_principle             String
-  therapeutic_class            String
-  regulatory_category          String
+  active_principle             String?
+  therapeutic_class            String?
+  regulatory_category          String?
   process_number               String    @unique
-  process_end_date             DateTime
+  process_end_date             DateTime?
   registration_number          String    @unique
-  registration_expiration_date DateTime
+  registration_expiration_date DateTime?
   registration_holder_company  String
   registration_status          String
   created_at                   DateTime  @default(now())

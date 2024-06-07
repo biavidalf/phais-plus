@@ -5,13 +5,13 @@ import { formatResponse } from "../../utilities/formatting";
 
 type CreateMedicineRequestBody = {
   name: string
-  active_principle: string
-  therapeutic_class: string
-  regulatory_category: string
+  active_principle?: string
+  therapeutic_class?: string
+  regulatory_category?: string
   process_number: string
-  process_end_date: Date
+  process_end_date?: Date
   registration_number: string
-  registration_expiration_date: Date
+  registration_expiration_date?: Date
   registration_holder_company: string
   registration_status: string
 };
