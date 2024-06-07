@@ -5,7 +5,7 @@ import { formatResponse } from "../../utilities/formatting";
 type GetMedicineRequestBody = {};
 
 export class GetMedicineUseCase {
-  constructor() {}
+  constructor() { }
 
   async execute(params: ParamsDictionary, body: GetMedicineRequestBody) {
     const { id } = params;
@@ -15,20 +15,18 @@ export class GetMedicineUseCase {
       select: {
         id: true,
         name: true,
-        approvation_date: true,
-        medicine_type: true,
         active_principle: true,
-        pregnancy_risk: true,
-        prescription: true,
-        laboratory: true,
-        pharmacological_group: true,
-        therapeuthic_indication: true,
-        equivalent_generic: true,
-        equivalent_similar: true,
-        generic_equivalent_to: true,
-        similar_equivalent_to: true,
+        therapeutic_class: true,
+        regulatory_category: true,
+        process_number: true,
+        process_end_date: true,
+        registration_number: true,
+        registration_expiration_date: true,
+        registration_holder_company: true,
+        registration_status: true,
         created_at: true,
         updated_at: true,
+        deleted_at: true,
       },
     });
 
