@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: 8,
-    paddingTop: 16,
+    paddingTop: 44,
     paddingHorizontal: 24,
   },
   contentContainer: {

@@ -17,6 +17,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(
             styles.input,
             error ? styles.invalidInput : styles.validInput,
           ]}
+          placeholderTextColor={colors.neutral[400]}
           {...inputProps}
         />
         {error && <Text style={styles.errorMessage}>{error.message}</Text>}

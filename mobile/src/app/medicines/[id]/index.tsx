@@ -1,9 +1,14 @@
+import medicineService from '@/api/medicine'
 import Information from '@/components/medicines/Information/info'
-import Presentation from '@/components/medicines/Presentation/presentation'
+import MedicineType from '@/components/medicines/MedicineType'
+import { colors } from '@/theme/colors'
 import { theme } from '@/theme/index'
-import { useState } from 'react'
+import { Medicine } from '@/types/api/medicine'
+import { useLocalSearchParams } from 'expo-router'
+import { useEffect, useState } from 'react'
 import {
-  Image,
+  ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,13 +17,50 @@ import {
 } from 'react-native'
 
 export default function Id() {
-  const [activeTab, setActiveTab] = useState('Apresentação')
+  const [activeTab, setActiveTab] = useState('Informações')
+  const { id } = useLocalSearchParams()
+
+  const [loading, setLoading] = useState<boolean>(true)
+  const [medicine, setMedicine] = useState<Medicine | null>(null)
+
+  useEffect(() => {
+    const getMedicine = async () => {
+      if (!id) {
+        throw new Error('Erro ao carregar o medicamento.')
+      }
+
+      const {
+        status,
+        data: { data: medicine },
+      } = await medicineService.show(id.toString())
+
+      if (status !== 200) {
+        throw new Error('Erro ao carregar a solicitação.')
+      }
+
+      setMedicine(medicine)
+    }
+    ;(async () => {
+      try {
+        Promise.all([getMedicine()])
+      } catch (error) {
+        Alert.alert(
+          'Erro',
+          error instanceof Error
+            ? error.message
+            : 'Erro interno ao carregar os medicamentos.',
+        )
+      } finally {
+        setLoading(false)
+      }
+    })()
+  }, [id])
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>#123 - Topison</Text>
-        <Image source={require('./typeR.png')} />
+        <MedicineType type="generic" />
       </View>
 
       <View style={styles.tabContainer}>
@@ -35,7 +77,11 @@ export default function Id() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {activeTab === 'Informações' ? <Information /> : <Presentation />}
+        {loading ? (
+          <ActivityIndicator size="large" color="#F4F4F5" />
+        ) : (
+          medicine && <Information medicine={medicine} />
+        )}
       </ScrollView>
     </View>
   )
@@ -56,7 +102,7 @@ function Tab({ label, activeTab, setActiveTab }: TabProps) {
         activeTab === label ? styles.activeTab : styles.inactiveTab,
       ]}
     >
-      <Text>{label}</Text>
+      <Text style={styles.tabTitle}>{label}</Text>
     </Pressable>
   )
 }
@@ -94,6 +140,10 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderBottomWidth: 2,
     paddingBottom: 10,
+  },
+  tabTitle: {
+    color: colors.neutral['200'],
+    textAlign: 'center',
   },
   activeTab: {
     color: theme.colors.green.main,

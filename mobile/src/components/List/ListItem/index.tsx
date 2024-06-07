@@ -8,7 +8,8 @@ interface ListItemProps {
   title: string
   subtitle: string
   action: string
-  status: string
+  status?: string
+  type?: string
 }
 
 export default function ListItem({
@@ -17,11 +18,14 @@ export default function ListItem({
   subtitle,
   action,
   status,
+  type = 'request',
 }: ListItemProps) {
   return (
     <View style={styles.container}>
       <View style={styles.statusIndicatorContainer}>
-        <Ionicons name="ellipse" size={9} color={getIndicatorColor(status)} />
+        {status && (
+          <Ionicons name="ellipse" size={9} color={getIndicatorColor(status)} />
+        )}
       </View>
 
       <View style={styles.titleContainer}>
@@ -29,7 +33,7 @@ export default function ListItem({
         <Text style={styles.subtitleText}>{subtitle}</Text>
       </View>
 
-      <Link href={`/request/${id}`}>
+      <Link href={`/${type}/${id}`}>
         <View style={styles.actionContainer}>
           <Text style={styles.actionText}>{action}</Text>
 

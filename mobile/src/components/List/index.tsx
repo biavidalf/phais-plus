@@ -6,7 +6,8 @@ type ListItem = {
   title: string
   subtitle: string
   action: string
-  status: string
+  status?: string
+  type?: string
 }
 
 type ListProps = {
@@ -14,10 +15,10 @@ type ListProps = {
   type?: string
 }
 
-export default function List({ data, type = '' }: ListProps) {
+export default function List({ data }: ListProps) {
   return (
     <ScrollView showsVerticalScrollIndicator={true} style={styles.container}>
-      {data.map(({ id, title, subtitle, action, status }) => (
+      {data.map(({ id, title, subtitle, action, status, type }) => (
         <ListItem
           key={id}
           id={id}
@@ -25,6 +26,7 @@ export default function List({ data, type = '' }: ListProps) {
           subtitle={subtitle}
           action={action}
           status={status}
+          type={type}
         />
       ))}
     </ScrollView>

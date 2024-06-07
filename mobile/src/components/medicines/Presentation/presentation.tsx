@@ -1,14 +1,14 @@
 import { theme } from '@/theme'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { medication } from '../../../app/(tabs)/medicines/[id]/mock'
+import { medication } from '../../../app/medicines/[id]/mock'
 
 export default function Presentation() {
   return (
     <View>
       <ScrollView contentContainerStyle={{ rowGap: 20 }}>
-        {medication.presentation.map((item, index) => {
-          return <Section key={index} item={item} />
-        })}
+        {medication.presentation.map((item, index) => (
+          <Section key={index} item={item} />
+        ))}
       </ScrollView>
     </View>
   )
@@ -24,7 +24,7 @@ interface SectionProps {
 
 function Section({ item }: SectionProps) {
   return (
-    <View style={styles.sectionContainer}>
+    <View>
       <Text style={styles.sectionTitleText}>{item.titulo}</Text>
       <View style={styles.sectionTopicsContainer}>
         {item.detalhes.map((item, index) => {
@@ -55,9 +55,6 @@ function Section({ item }: SectionProps) {
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    paddingBottom: 20,
-  },
   sectionTitleText: {
     backgroundColor: theme.colors.bg.dark,
     color: theme.colors.neutral.sec,

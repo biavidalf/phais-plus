@@ -1,63 +1,75 @@
 import { theme } from '@/theme'
+import { Medicine } from '@/types/api/medicine'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { medication } from '../../../app/(tabs)/medicines/[id]/mock'
 
-export default function Information() {
+interface InformationProps {
+  medicine: Medicine | null
+}
+
+export default function Information({ medicine }: InformationProps) {
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{ rowGap: 20 }}
-        style={styles.dataContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <Section
-          title="Princípios ativos"
-          content={medication.active_principle}
-        />
-        <Section
-          title="Grupos Farmacológicos"
-          content={medication.pharmacological_group}
-        />
-        <Section
-          title="Indicações Terapêuticas"
-          content={medication.therapeuthic_indication}
-        />
-        <Section title="Laboratório" content={medication.laboratory} />
-        <Section
-          title="Genericos"
-          content={medication.equivalent_generic}
-          withDetails
-        />
-        <Section
-          title="Similares"
-          content={medication.equivalent_similar}
-          withDetails
-        />
+      {medicine && (
+        <ScrollView
+          contentContainerStyle={{ rowGap: 20 }}
+          style={styles.dataContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Section
+            title="Princípios ativos"
+            content={medicine?.active_principle ?? '-'}
+          />
+          <Section
+            title="Grupos Farmacológicos"
+            content={medicine?.pharmacological_group ?? '-'}
+          />
+          <Section
+            title="Indicações Terapêuticas"
+            content={medicine?.therapeuthic_indication ?? '-'}
+          />
+          <Section title="Laboratório" content={medicine?.laboratory ?? '-'} />
+          <Section
+            title="Genericos"
+            content={[
+              medicine?.equivalent_generic.name ?? '-',
+              medicine?.equivalent_generic.manufacturer ?? '-',
+            ]}
+            withDetails
+          />
+          <Section
+            title="Similares"
+            content={[
+              medicine?.equivalent_similar.name ?? '-',
+              medicine?.equivalent_similar.manufacturer ?? '-',
+            ]}
+            withDetails
+          />
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitleText}>Risco na gravidez</Text>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitleText}>Risco na gravidez</Text>
 
-          <View style={styles.pregnancyRiskSection}>
-            <View style={styles.pregnancyRiskLetterContainer}>
-              <Text style={styles.pregnancyRiskLetterText}>
-                {medication.pregnancy_risk.letter}
+            <View style={styles.pregnancyRiskSection}>
+              <View style={styles.pregnancyRiskLetterContainer}>
+                <Text style={styles.pregnancyRiskLetterText}>
+                  {medicine?.pregnancy_risk?.letter ?? '-'}
+                </Text>
+              </View>
+              <Text style={styles.pregnancyRiskDescription}>
+                {medicine?.pregnancy_risk?.description ?? '-'}
               </Text>
             </View>
-            <Text style={styles.pregnancyRiskDescription}>
-              {medication.pregnancy_risk.description}
-            </Text>
-          </View>
 
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.smallerText}>
-              Aprovado pela Anvisa: {medication.approvation_date ?? '-'}
-            </Text>
-            <Text style={styles.smallerText}>
-              Receituário: {medication.prescription ?? '-'}
-            </Text>
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.smallerText}>
+                Aprovado pela Anvisa: {medicine?.approvation_date ?? '-'}
+              </Text>
+              <Text style={styles.smallerText}>
+                Receituário: {medicine?.prescription ?? '-'}
+              </Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   )
 }

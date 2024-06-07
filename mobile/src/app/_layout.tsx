@@ -47,8 +47,12 @@ export default function Layout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="profile/index" options={{ title: 'Perfil' }} />
       <Stack.Screen
-        name="request/[id]"
+        name="request/[id]/index"
         options={{ title: 'Detalhes da solicitação' }}
+      />
+      <Stack.Screen
+        name="medicines/[id]/index"
+        options={{ title: 'Detalhes do medicamento' }}
       />
     </Stack>
   )
