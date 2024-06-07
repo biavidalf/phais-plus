@@ -20,6 +20,14 @@ export interface StoreUserPayload {
   phone: string
 }
 
+export interface UpdateUserPayload {
+  cnpj?: string
+  email?: string
+  username?: string
+  password?: string
+  phone?: string
+}
+
 export interface AuthenticateUserPayload {
   cnpj: string
   password: string
