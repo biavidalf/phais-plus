@@ -7,117 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model MedicineType {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("medicine_types")
-}
-
-model ActivePrinciple {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("active_principles")
-}
-
-model PharmacologicalGroup {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("pharmacological_groups")
-}
-
-model TherapeuthicIndication {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("therapeuthic_indications")
-}
-
-model PregnancyRisk {
-  id          String    @id @default(uuid())
-  letter      String
-  name        String
-  description String
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  deleted_at  DateTime?
-
-  medicine Medicine[]
-
-  @@map("pregnancy_risks")
-}
-
-model Prescription {
-  id         String    @id @default(uuid())
-  name       String
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("prescriptions")
-}
-
-model Laboratory {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  deleted_at DateTime?
-
-  medicine Medicine[]
-
-  @@map("laboratories")
-}
-
 model Medicine {
-  id                  String    @id @default(uuid())
-  name                String
-  medicine_type_id    String?
-  active_principle_id String?
-  pregnancy_risk_id   String?
-  prescription_id     String?
-  laboratory_id       String?
-  approvation_date    DateTime?
-  created_at          DateTime  @default(now())
-  updated_at          DateTime  @updatedAt
-  deleted_at          DateTime?
-
-  medicine_type    MedicineType?    @relation(fields: [medicine_type_id], references: [id])
-  active_principle ActivePrinciple? @relation(fields: [active_principle_id], references: [id])
-  pregnancy_risk   PregnancyRisk?   @relation(fields: [pregnancy_risk_id], references: [id])
-  prescription     Prescription?    @relation(fields: [prescription_id], references: [id])
-  laboratory       Laboratory?      @relation(fields: [laboratory_id], references: [id])
-
-  pharmacological_group   PharmacologicalGroup[]
-  therapeuthic_indication TherapeuthicIndication[]
-  equivalent_generic      Medicine[]               @relation("EquivalentGenerics")
-  equivalent_similar      Medicine[]               @relation("EquivalentSimilars")
-  generic_equivalent_to   Medicine[]               @relation("EquivalentGenerics")
-  similar_equivalent_to   Medicine[]               @relation("EquivalentSimilars")
+  id                           String    @id @default(cuid())
+  name                         String
+  active_principle             String
+  therapeutic_class            String
+  regulatory_category          String
+  process_number               String    @unique
+  process_end_date             DateTime
+  registration_number          String    @unique
+  registration_expiration_date DateTime
+  registration_holder_company  String
+  registration_status          String
+  created_at                   DateTime  @default(now())
+  updated_at                   DateTime  @updatedAt
+  deleted_at                   DateTime?
 
   @@map("medicines")
 }

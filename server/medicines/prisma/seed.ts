@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import axios, { AxiosInstance, AxiosError } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 const prisma = new PrismaClient();
-const BULARIO_API_URL = "https://bula.vercel.app";
-const PHAIS_PLUS_MEDICINE_API_URL = "http://localhost:8080/medicine";
+const BULARIO_API_URL = "http://localhost:5000";
+const PHAIS_PLUS_MEDICINE_API_URL = "http://localhost:3002";
 
 interface CategoriesResponse {
   data: {
@@ -93,6 +93,7 @@ async function main() {
     baseURL: PHAIS_PLUS_MEDICINE_API_URL,
   });
 
+  console.log("CREATING CATEGORIES...")
   const categories = await getCategories(axiosBularioInstance);
   const categoryDescriptions = new Set(
     categories.map((category) => category.descricao.toUpperCase())
@@ -106,15 +107,23 @@ async function main() {
     }),
   });
 
+  console.log(`[SUCCESS] ${categories.length} CATEGORIES CREATED`)
+
+  console.log("GETTING MEDICINES BY CATEGORY...")
   let medicines: DatabaseMedicine[] = [];
   let activePrinciples: Set<string> = new Set();
   let prescriptions: Set<string> = new Set();
   let pharmacologicalGroups: Set<string> = new Set();
   for (const category of categories) {
+    console.log(`GETTING MEDICINES FROM CATEGORY ${category.descricao.toUpperCase()}...`)
     const medicineProcessNumbers = await getMedicinesByCategory(
       axiosBularioInstance,
       category.id
     );
+
+    if (!medicineProcessNumbers) {
+      continue;
+    }
 
     const processNumbers = medicineProcessNumbers.map(
       (medicineProcessNumber) => medicineProcessNumber.numProcesso
@@ -165,6 +174,8 @@ async function main() {
         throw exception;
       }
     }
+
+    console.log(`[SUCCESS] ${processNumbers.length} MEDICINES RETRIEVED`)
   }
 
   const activePrincipleArray = [...activePrinciples];
@@ -175,29 +186,36 @@ async function main() {
   await prisma.prescription.deleteMany();
   await prisma.pharmacologicalGroup.deleteMany();
 
+  console.log("CREATING ACTIVE PRINCIPLES...")
   await prisma.activePrinciple.createMany({
     data: activePrincipleArray.map((activePrinciple) => {
       return { name: activePrinciple };
     }),
   });
+  console.log(`[SUCCESS] ${activePrincipleArray.length} ACTIVE PRINCIPLES CREATED`)
 
+  console.log("CREATING PRESCRIPTIONS...")
   await prisma.prescription.createMany({
     data: prescriptionArray.map((prescription) => {
       return { name: prescription };
     }),
   });
+  console.log(`[SUCCESS] ${prescriptionArray.length} PRESCRIPTIONS CREATED`)
 
+  console.log("CREATING PHARMACOLOGICAL GROUPS...")
   await prisma.pharmacologicalGroup.createMany({
     data: pharmacologicalGroupArray.map((pharmacologicalGroup) => {
       return { name: pharmacologicalGroup };
     }),
   });
+  console.log(`[SUCCESS] ${pharmacologicalGroupArray.length} PHARMACOLOGICAL GROUPS CREATED`)
 
   const dbMedicineTypes = await prisma.medicineType.findMany();
   const dbActivePrinciples = await prisma.activePrinciple.findMany();
   const dbPrescriptions = await prisma.prescription.findMany();
   const dbPharmacologicalGroups = await prisma.pharmacologicalGroup.findMany();
 
+  console.log("CREATING MEDICINES...")
   for (const medicine of medicines) {
     await axiosPhaisPlusMedicineInstance.post("/", {
       name: medicine.name,
@@ -220,6 +238,8 @@ async function main() {
       ),
     });
   }
+
+  console.log(`[SUCCESS] ${medicines.length} MEDICINES CREATED`)
 }
 
 main()
